@@ -31,7 +31,7 @@ document==1.0
 docutils==0.20.1
 et-xmlfile==1.1.0
 exceptiongroup==1.2.0
-fastapi==0.105.0
+fastapi==0.109.1
 filelock==3.13.1
 flatbuffers==23.5.26
 fonttools==4.47.2
