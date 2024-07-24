@@ -46,7 +46,7 @@ OS-Copilot is an open-source library to build generalist agents capable of autom
 1. **Clone the GitHub Repository:** 
 
    ```
-   git clone https://github.com/OS-Copilot/OS-Copilot.git
+   git clone [https://github.com/OS-Copilot/OS-Copilot.git](https://github.com/creator-codie/OS-Copilot.git)
    ```
 
 2. **Set Up Python Environment and Install Dependencies:** 
