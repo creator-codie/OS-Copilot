@@ -80,7 +80,6 @@ class FridayAgent(BaseAgent):
                         sub_task, self.config.max_repair_iterations
                     )
                 )
-                # sys.exit()
                 break
 
     def self_refining(self, tool_name, execution_state: ExecutionState):
@@ -110,7 +109,6 @@ class FridayAgent(BaseAgent):
             score = judgement.score
             # need_repair, critique, score, reasoning, error_type
             if judgement.status == "Replan":
-                # raise NotImplementedError
                 print("The current task requires replanning...")
                 new_sub_task_list = self.replanning(tool_name, judgement.critique)
                 print(

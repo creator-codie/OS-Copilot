@@ -51,8 +51,6 @@ for service in server_list:
     if service in services:
         app.include_router(services[service])
 
-# proxy_manager = ConfigManager()
-# proxy_manager.apply_proxies()
 
 if __name__ == "__main__":
     import uvicorn

@@ -115,7 +115,6 @@ class FridayAgent(BaseAgent):
             score = judgement.score
             # need_repair, critique, score, reasoning, error_type
             if judgement.status == "Replan":
-                # raise NotImplementedError
                 print("The current task requires replanning...")
                 new_sub_task_list = self.replanning(tool_name, judgement.critique)
                 print(

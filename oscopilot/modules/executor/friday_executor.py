@@ -118,24 +118,12 @@ class FridayExecutor(BaseModule):
                 + """print("</return>")"""
             )
             code = code + "\nresult=" + invoke + info
-        # state = EnvState(command=code)
         print("************************<code>**************************")
         print(code)
         print("************************</code>*************************")
-        # for output_line_dic in self.environment.step(code):
-        #     if output_line_dic['format'] == 'active_line':
-        #         continue
-        #     content = output_line_dic['content']
-        #     if 'Traceback' in content:
-        #         state.error = (state.error or '') + content
-        #     else:
-        #         state.result += content
-        # state.pwd = self.environment.working_dir
-        # state.ls = subprocess.run(['ls'], cwd=self.environment.working_dir, capture_output=True, text=True).stdout
         state = self.environment.step(node_type, code)  # node_type
         print("************************<state>**************************")
         print(state)
-        # print("error: " + state.error + "\nresult: " + state.result + "\npwd: " + state.pwd + "\nls: " + state.ls)
         print("************************</state>*************************")
         return state
 
@@ -316,9 +304,6 @@ class FridayExecutor(BaseModule):
             # Save code and descriptions to databases and JSON files
             self.tool_manager.add_new_tool(tool_info)
             # # Parameter description save path
-            # args_description_file_path = self.tool_manager.generated_tool_repo_dir + '/args_description/' + tool + '.txt'
-            # # save args_description
-            # self.save_str_to_path(args_description, args_description_file_path)
         else:
             print("tool already exists!")
 
@@ -464,7 +449,6 @@ class FridayExecutor(BaseModule):
         match = re.search(r'"""\s*\n\s*(.*?)[\.\n]', class_code)
         if match:
             first_sentence = match.group(1)
-            # print("First sentence of the comment:", first_sentence)
         else:
             print("No description found.")
             raise NotImplementedError
