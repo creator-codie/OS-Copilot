@@ -1,20 +1,23 @@
 import pytest
-from oscopilot.utils import setup_config
-from oscopilot import BasicPlanner, ToolManager
+
+from oscopilot import BasicPlanner
 from oscopilot.prompts.friday2_pt import prompt
+from oscopilot.utils import setup_config
+
 
 class TestPlanner:
     """
     A test class for verifying the functionality of the FridayPlanner class.
-    
+
     This class focuses on testing the task decomposition capabilities of the planner, ensuring that tasks
     can be broken down into subtasks effectively. It is crucial for validating that the planner properly
     interprets and decomposes high-level tasks into actionable steps.
-    """    
+    """
+
     def setup_method(self, method):
         """
         Setup method executed before each test method in this class.
-        
+
         This method prepares the FridayPlanner instance by configuring it with necessary settings and a predefined
         planning prompt, ensuring that the planner is ready to handle task decomposition.
 
@@ -22,7 +25,7 @@ class TestPlanner:
             method: The test method that will be run after this setup method. While this parameter is not used
                     directly in the setup, it is included to comply with the expected signature for setup methods
                     in the testing framework.
-        """        
+        """
         args = setup_config()
         self.prompt = prompt["planning_prompt"]
         self.planner = BasicPlanner(self.prompt)
@@ -36,12 +39,11 @@ class TestPlanner:
         subtasks would indicate a failure in the decomposition process, which is critical for the planner's utility
         in real-world applications.
 
-        """        
+        """
         task = ""
         self.planner.decompose_task(task)
         assert self.planner.sub_task_list != []
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pytest.main()
-    
-    
