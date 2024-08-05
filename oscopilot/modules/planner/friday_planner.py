@@ -23,9 +23,7 @@ class FridayPlanner(BaseModule):
         self.sub_task_list = []
 
     def reset_plan(self):
-        """
-        Resets the tool graph and subtask list to their initial states.
-        """
+        """Resets the tool graph and subtask list to their initial states."""
         self.tool_num = 0
         self.tool_node = {}
         self.tool_graph = defaultdict(list)

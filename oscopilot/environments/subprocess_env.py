@@ -85,18 +85,14 @@ class SubprocessEnv(BaseEnv):
         return code
 
     def terminate(self):
-        """
-        Terminates the subprocess if it is running.
-        """        
+        """Terminates the subprocess if it is running."""        
         if self.process:
             self.process.terminate()
             self.process.stdin.close()
             self.process.stdout.close()
 
     def start_process(self):
-        """
-        Starts the subprocess to execute code.
-        """        
+        """Starts the subprocess to execute code."""        
         if self.process:
             self.terminate()
 

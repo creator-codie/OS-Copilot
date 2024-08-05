@@ -35,9 +35,7 @@ class OpenAI:
     """
 
     def __init__(self):
-        """
-        Initializes the OpenAI object with the given configuration.
-        """
+        """Initializes the OpenAI object with the given configuration."""
 
         self.model_name = MODEL_NAME
 
@@ -86,9 +84,7 @@ class OLLAMA:
     """
 
     def __init__(self):
-        """
-        Initializes the OpenAI object with the given configuration.
-        """
+        """Initializes the OpenAI object with the given configuration."""
 
         self.model_name = MODEL_NAME
 

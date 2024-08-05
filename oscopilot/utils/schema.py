@@ -5,9 +5,7 @@ from typing import Dict, List, Optional, Union
 
 @dataclass
 class RepairingResult:
-    """
-    Stores the results and intermediate representation of the repairing process
-    """
+    """Stores the results and intermediate representation of the repairing process"""
 
     status: str = ""
     code: str = ""
@@ -18,9 +16,7 @@ class RepairingResult:
 
 @dataclass
 class JudgementResult:
-    """
-    Stores the results and intermediate representation of the judging process
-    """
+    """Stores the results and intermediate representation of the judging process"""
 
     status: bool = False
     critique: str = ""
@@ -31,9 +27,7 @@ class JudgementResult:
 
 @dataclass
 class InnerMonologue:
-    """
-    Stores all the intermediate representation during agent running
-    """
+    """Stores all the intermediate representation during agent running"""
 
     reasoning: str = ""
     error_type: str = ""
@@ -45,9 +39,7 @@ class InnerMonologue:
 
 @dataclass
 class EnvState:
-    """
-    Represents the state of an environment in which commands are executed.
-    """
+    """Represents the state of an environment in which commands are executed."""
 
     command: List[str] = field(default_factory=list)
     result: Optional[str] = ""
@@ -66,9 +58,7 @@ class EnvState:
 
 @dataclass
 class ExecutionState:
-    """
-    Stores all the intermediate representation during agent executing.
-    """
+    """Stores all the intermediate representation during agent executing."""
 
     state: Optional[EnvState] = None
     node_type: str = ""
