@@ -330,9 +330,7 @@ def convert_to_openai_messages(
     shrink_images=True,
     code_output_sender="assistant",
 ):
-    """
-    Converts LMC messages into OpenAI messages
-    """
+    """Converts LMC messages into OpenAI messages"""
     new_messages = []
 
     for message in messages:
@@ -536,9 +534,7 @@ def convert_to_openai_messages(
 
 
 class Llm:
-    """
-    A stateless LMC-style LLM with some helpful properties.
-    """
+    """A stateless LMC-style LLM with some helpful properties."""
 
     def __init__(self):
         # Chat completions "endpoint"

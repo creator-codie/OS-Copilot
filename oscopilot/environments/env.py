@@ -155,16 +155,12 @@ class Env(BaseEnv):
             self.stop()
 
     def stop(self):
-        """
-        Stops the execution of all active languages.
-        """
+        """Stops the execution of all active languages."""
         for language in self._active_languages.values():
             language.stop()
 
     def terminate(self):
-        """
-        Terminates all active language environments.
-        """
+        """Terminates all active language environments."""
         for language_name in list(self._active_languages.keys()):
             language = self._active_languages[language_name]
             if (

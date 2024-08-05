@@ -125,9 +125,7 @@ class PythonJupyterEnv(BaseEnv):
     # self.run(code)
 
     def terminate(self):
-        """
-        Terminates the IPython kernel and stops its channels.
-        """
+        """Terminates the IPython kernel and stops its channels."""
         self.kc.stop_channels()
         self.km.shutdown_kernel()
 
@@ -313,9 +311,7 @@ class PythonJupyterEnv(BaseEnv):
             time.sleep(0.1)
 
     def stop(self):
-        """
-        Stops the execution of code by setting the finish flag.
-        """
+        """Stops the execution of code by setting the finish flag."""
         self.finish_flag = True
 
     def preprocess_code(self, code):
