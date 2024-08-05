@@ -68,8 +68,7 @@ class BingAPIV2:
                 continue
             if result is not None:
                 return result
-            else:
-                continue
+            continue
         raise RuntimeError("Failed to access Bing Search API.")
 
     def load_page(self, url: str) -> str:

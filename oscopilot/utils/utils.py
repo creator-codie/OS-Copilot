@@ -481,7 +481,7 @@ def get_os_version():
     if system == "Darwin":
         # macOS
         return "macOS " + platform.mac_ver()[0]
-    elif system == "Linux":
+    if system == "Linux":
         try:
             with open("/etc/os-release") as f:
                 lines = f.readlines()
@@ -492,8 +492,7 @@ def get_os_version():
             pass
 
         return platform.version()
-    else:
-        return "Unknown Operating System"
+    return "Unknown Operating System"
 
 
 def check_os_version(s):

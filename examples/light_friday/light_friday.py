@@ -42,8 +42,7 @@ def extract_code(input_string):
                 language = "Bash"
 
         return code.strip(), language
-    else:
-        return None, None
+    return None, None
 
 
 class LightFriday(BaseModule):

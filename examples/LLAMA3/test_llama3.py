@@ -60,9 +60,8 @@ class LLAMA3:
             # Get the response data
             logging.info(f"""Response: {response.json()["message"]["content"]}""")
             return response.json()["message"]["content"]
-        else:
-            logging.error("Failed to call LLM: ", response.status_code, response.text)
-            return ""
+        logging.error("Failed to call LLM: ", response.status_code, response.text)
+        return ""
 
 
 llm = LLAMA3()

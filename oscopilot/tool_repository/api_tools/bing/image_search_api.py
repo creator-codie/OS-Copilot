@@ -42,6 +42,5 @@ class ImageSearchAPI:
                     if len(image_List) > top_k:
                         image_List = image_List[:top_k]
                 return image_List
-            else:
-                continue
+            continue
         raise RuntimeError("Failed to access Bing Search API.")
