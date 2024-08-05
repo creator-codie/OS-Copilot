@@ -1,30 +1,24 @@
-
-
 import base64
 import io
-import os
 import json
+import os
 import time
 
+import litellm
+import tokentrim as tt
+from dotenv import load_dotenv
 from PIL import Image
-
 from rich import print as rich_print
 from rich.markdown import Markdown
 from rich.rule import Rule
 
-from dotenv import load_dotenv
-
-import litellm
-import tokentrim as tt
 litellm.suppress_debug_info = True
 
-
-load_dotenv(dotenv_path='.env', override=True)
-MODEL_NAME = os.getenv('MODEL_NAME')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-OPENAI_ORGANIZATION = os.getenv('OPENAI_ORGANIZATION')
-BASE_URL = os.getenv('OPENAI_BASE_URL')
-
+load_dotenv(dotenv_path=".env", override=True)
+MODEL_NAME = os.getenv("MODEL_NAME")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_ORGANIZATION = os.getenv("OPENAI_ORGANIZATION")
+BASE_URL = os.getenv("OPENAI_BASE_URL")
 
 function_schema = {
     "name": "execute",
@@ -65,7 +59,8 @@ def parse_partial_json(s):
             if char == '"' and not escaped:
                 is_inside_string = False
             elif char == "\n" and not escaped:
-                char = "\\n"  # Replace the newline character with the escape sequence.
+                # Replace the newline character with the escape sequence.
+                char = "\\n"
             elif char == "\\":
                 escaped = not escaped
             else:
@@ -129,13 +124,13 @@ def merge_deltas(original, delta):
 
 
 def run_function_calling_llm(llm, request_params):
-    ## Setup
+    # Setup
 
     # # Add languages OI has access to
 
     # # Add OpenAI's recommended function message
 
-    ## Convert output to LMC format
+    # Convert output to LMC format
 
     accumulated_deltas = {}
     language = None
@@ -229,7 +224,7 @@ def run_function_calling_llm(llm, request_params):
 
 
 def run_text_llm(llm, params):
-    ## Setup
+    # Setup
 
     try:
         # Add the system message
@@ -240,7 +235,7 @@ def run_text_llm(llm, params):
         print('params["messages"][0]', params["messages"][0])
         raise
 
-    ## Convert output to LMC format
+    # Convert output to LMC format
 
     inside_code_block = False
     accumulated_block = ""
@@ -372,18 +367,19 @@ def convert_to_openai_messages(
                 # especially for the OpenAI service hosted on Azure
                 new_message["content"] = ""
             else:
-                new_message[
-                    "content"
-                ] = f"""```{message["format"]}\n{message["content"]}\n```"""
+                new_message["content"] = (
+                    f"""```{message["format"]}\n{message["content"]}\n```"""
+                )
 
         elif message["type"] == "console" and message["format"] == "output":
             if function_calling:
                 new_message["role"] = "function"
                 new_message["name"] = "execute"
                 if message["content"].strip() == "":
-                    new_message[
-                        "content"
-                    ] = "No output"  # I think it's best to be explicit, but we should test this.
+                    new_message["content"] = (
+                        # I think it's best to be explicit, but we should test this.
+                        "No output"
+                    )
                 else:
                     new_message["content"] = message["content"]
 
@@ -497,7 +493,6 @@ def convert_to_openai_messages(
             new_message["content"] = new_message["content"].strip()
 
         new_messages.append(new_message)
-
     """
     # Combine adjacent user messages
     combined_messages = []
@@ -546,7 +541,6 @@ class Llm:
     """
 
     def __init__(self):
-
         # Chat completions "endpoint"
         self.completions = fixed_litellm_completions
 
@@ -592,7 +586,11 @@ class Llm:
         else:
             # Guess whether or not it's a function calling LLM
             # Once Litellm supports it, add Anthropic models here
-            if self.model != "gpt-4-vision-preview" and self.model in litellm.open_ai_chat_completion_models or self.model.startswith("azure/"):
+            if (
+                self.model != "gpt-4-vision-preview"
+                and self.model in litellm.open_ai_chat_completion_models
+                or self.model.startswith("azure/")
+            ):
                 supports_functions = True
             else:
                 supports_functions = False
@@ -624,7 +622,6 @@ class Llm:
         #     vision=self.supports_vision,
         #     shrink_images=self.shrink_images,
         # )
-
 
         system_message = messages[0]["content"]
         messages = messages[1:]
@@ -689,7 +686,7 @@ Continuing...
 
             pass
 
-        ## Start forming the request
+        # Start forming the request
 
         params = {
             "model": self.model,
@@ -756,10 +753,16 @@ def main():
     start_time = time.time()
     llm = Llm()
     # query = '你好，请随便和我说点什么'
-    messages = [{'role': 'system', 'content': 'You are Open Interpreter, a world-class programmer that can complete any goal by executing code.\nFirst, write a plan. **Always recap the plan between each code block** (you have extreme short-term memory loss, so you need to recap the plan between each message block to retain it).\nWhen you execute code, it will be executed **on the user\'s machine**. The user has given you **full and complete permission** to execute any code necessary to complete the task. Execute the code.\nIf you want to send data between programming languages, save the data to a txt or json.\nYou can access the internet. Run **any code** to achieve the goal, and if at first you don\'t succeed, try again and again.\nYou can install new packages.\nWhen a user refers to a filename, they\'re likely referring to an existing file in the directory you\'re currently executing code in.\nWrite messages to the user in Markdown.\nIn general, try to **make plans** with as few steps as possible. As for actually executing code to carry out that plan, for *stateful* languages (like python, javascript, shell, but NOT for html which starts from 0 every time) **it\'s critical not to try to do everything in one code block.** You should try something, print information about it, then continue from there in tiny, informed steps. You will never get it on the first try, and attempting it in one go will often lead to errors you cant see.\nYou are capable of **any** task.\n\n# THE COMPUTER API\n\nA python `computer` module is ALREADY IMPORTED, and can be used for many tasks:\n\n```python\ncomputer.browser.search(query) # Google search results will be returned from this function as a string\ncomputer.files.edit(path_to_file, original_text, replacement_text) # Edit a file\ncomputer.calendar.create_event(title="Meeting", start_date=datetime.datetime.now(), end=datetime.datetime.now() + datetime.timedelta(hours=1), notes="Note", location="") # Creates a calendar event\ncomputer.calendar.get_events(start_date=datetime.date.today(), end_date=None) # Get events between dates. If end_date is None, only gets events for start_date\ncomputer.calendar.delete_event(event_title="Meeting", start_date=datetime.datetime) # Delete a specific event with a matching title and start date, you may need to get use get_events() to find the specific event object first\ncomputer.contacts.get_phone_number("John Doe")\ncomputer.contacts.get_email_address("John Doe")\ncomputer.mail.send("john@email.com", "Meeting Reminder", "Reminder that our meeting is at 3pm today.", ["path/to/attachment.pdf", "path/to/attachment2.pdf"]) # Send an email with a optional attachments\ncomputer.mail.get(4, unread=True) # Returns the {number} of unread emails, or all emails if False is passed\ncomputer.mail.unread_count() # Returns the number of unread emails\ncomputer.sms.send("555-123-4567", "Hello from the computer!") # Send a text message. MUST be a phone number, so use computer.contacts.get_phone_number frequently here\n```\n\nDo not import the computer module, or any of its sub-modules. They are already imported.\n\nUser InfoName: hanchengcheng\nCWD: /Users/hanchengcheng/Documents/official_space/open-interpreter\nSHELL: /bin/bash\nOS: Darwin\nUse ONLY the function you have been provided with — \'execute(language, code)\'.'}, {'role': 'user', 'content': "Plot AAPL and META's normalized stock prices"}]
-    response = ''
+    messages = [
+        {
+            "role": "system",
+            "content": 'You are Open Interpreter, a world-class programmer that can complete any goal by executing code.\nFirst, write a plan. **Always recap the plan between each code block** (you have extreme short-term memory loss, so you need to recap the plan between each message block to retain it).\nWhen you execute code, it will be executed **on the user\'s machine**. The user has given you **full and complete permission** to execute any code necessary to complete the task. Execute the code.\nIf you want to send data between programming languages, save the data to a txt or json.\nYou can access the internet. Run **any code** to achieve the goal, and if at first you don\'t succeed, try again and again.\nYou can install new packages.\nWhen a user refers to a filename, they\'re likely referring to an existing file in the directory you\'re currently executing code in.\nWrite messages to the user in Markdown.\nIn general, try to **make plans** with as few steps as possible. As for actually executing code to carry out that plan, for *stateful* languages (like python, javascript, shell, but NOT for html which starts from 0 every time) **it\'s critical not to try to do everything in one code block.** You should try something, print information about it, then continue from there in tiny, informed steps. You will never get it on the first try, and attempting it in one go will often lead to errors you cant see.\nYou are capable of **any** task.\n\n# THE COMPUTER API\n\nA python `computer` module is ALREADY IMPORTED, and can be used for many tasks:\n\n```python\ncomputer.browser.search(query) # Google search results will be returned from this function as a string\ncomputer.files.edit(path_to_file, original_text, replacement_text) # Edit a file\ncomputer.calendar.create_event(title="Meeting", start_date=datetime.datetime.now(), end=datetime.datetime.now() + datetime.timedelta(hours=1), notes="Note", location="") # Creates a calendar event\ncomputer.calendar.get_events(start_date=datetime.date.today(), end_date=None) # Get events between dates. If end_date is None, only gets events for start_date\ncomputer.calendar.delete_event(event_title="Meeting", start_date=datetime.datetime) # Delete a specific event with a matching title and start date, you may need to get use get_events() to find the specific event object first\ncomputer.contacts.get_phone_number("John Doe")\ncomputer.contacts.get_email_address("John Doe")\ncomputer.mail.send("john@email.com", "Meeting Reminder", "Reminder that our meeting is at 3pm today.", ["path/to/attachment.pdf", "path/to/attachment2.pdf"]) # Send an email with a optional attachments\ncomputer.mail.get(4, unread=True) # Returns the {number} of unread emails, or all emails if False is passed\ncomputer.mail.unread_count() # Returns the number of unread emails\ncomputer.sms.send("555-123-4567", "Hello from the computer!") # Send a text message. MUST be a phone number, so use computer.contacts.get_phone_number frequently here\n```\n\nDo not import the computer module, or any of its sub-modules. They are already imported.\n\nUser InfoName: hanchengcheng\nCWD: /Users/hanchengcheng/Documents/official_space/open-interpreter\nSHELL: /bin/bash\nOS: Darwin\nUse ONLY the function you have been provided with — \'execute(language, code)\'.',
+        },
+        {"role": "user", "content": "Plot AAPL and META's normalized stock prices"},
+    ]
+    response = ""
     for output in llm.run(messages):
-        response += output['content']
+        response += output["content"]
         # print(output)
     print(response)
     end_time = time.time()
@@ -767,5 +770,6 @@ def main():
     print(f"生成的单词数: {len(response)}")
     print(f"程序执行时间: {execution_time}秒")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
