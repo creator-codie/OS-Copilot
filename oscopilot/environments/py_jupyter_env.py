@@ -519,7 +519,7 @@ def string_to_python(code_as_string):
     # Traverse the AST
     for node in ast.walk(parsed_code):
         # Check for import statements
-        if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
             for alias in node.names:
                 # Handling the alias in import statements
                 if alias.asname:
