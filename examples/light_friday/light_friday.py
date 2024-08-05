@@ -1,21 +1,23 @@
 # This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
 
-from oscopilot.utils import setup_config, setup_pre_run
-from oscopilot.modules.base_module import BaseModule
+import os
 import re
+
+import dotenv
 from rich.console import Console
 from rich.markdown import Markdown
-import dotenv
-import os
 
-dotenv.load_dotenv(dotenv_path='.env', override=True)
-MODEL_NAME = os.getenv('MODEL_NAME')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-OPENAI_ORGANIZATION = os.getenv('OPENAI_ORGANIZATION')
-BASE_URL = os.getenv('OPENAI_BASE_URL')
+from oscopilot.modules.base_module import BaseModule
+from oscopilot.utils import setup_config, setup_pre_run
 
+dotenv.load_dotenv(dotenv_path=".env", override=True)
+MODEL_NAME = os.getenv("MODEL_NAME")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_ORGANIZATION = os.getenv("OPENAI_ORGANIZATION")
+BASE_URL = os.getenv("OPENAI_BASE_URL")
 
 console = Console()
+
 
 def rich_print(markdown_text):
     md = Markdown(markdown_text)
@@ -27,7 +29,7 @@ def send_chat_prompts(message, llm):
 
 
 def extract_code(input_string):
-    pattern = r"```(\w+)?\s*(.*?)```"  
+    pattern = r"```(\w+)?\s*(.*?)```"
     matches = re.findall(pattern, input_string, re.DOTALL)
 
     if matches:
@@ -45,21 +47,22 @@ def extract_code(input_string):
 
 
 class LightFriday(BaseModule):
+
     def __init__(self, args):
         super().__init__()
         self.args = args
 
     def execute_tool(self, code, lang):
         state = self.environment.step(lang, code)  # node_type
-        return_info = ''
-        if state.result is not None and state.result.strip() != '':
-            return_info = '**Execution Result** :' + state.result.strip()
-        if state.error is not None and state.error.strip() != '':
-            return_info = '\n**Execution Error** :' + state.error.strip()
+        return_info = ""
+        if state.result is not None and state.result.strip() != "":
+            return_info = "**Execution Result** :" + state.result.strip()
+        if state.error is not None and state.error.strip() != "":
+            return_info = "\n**Execution Error** :" + state.error.strip()
         return return_info.strip()
 
     def run(self, task):
-        light_planner_sys_prompt = '''You are Light Friday, a world-class programmer that can complete any goal by executing code.
+        light_planner_sys_prompt = """You are Light Friday, a world-class programmer that can complete any goal by executing code.
 First, write a plan. **Always recap the plan between each code block** (you have extreme short-term memory loss, so you need to recap the plan between each message block to retain it).
 When you execute code, it will be executed **on the user's machine**. The user has given you **full and complete permission** to execute any code necessary to complete the task. Execute the code.
 If you want to send data between programming languages, save the data to a txt or json.
@@ -76,12 +79,16 @@ Include a comment in your code blocks to specify the programming language used, 
 print("hello, world")
 ```
 Currently, supported languages include Python and Bash."
-'''  #  Try to use `print` or `echo` to output information needed for the subsequent tasks, or the next step might not get the required information.
-        light_planner_user_prompt = '''
+"""  # Try to use `print` or `echo` to output information needed for the subsequent tasks, or the next step might not get the required information.
+        light_planner_user_prompt = """
         User's information are as follows:
         System Version: {system_version}
         Task: {task}
-        Current Working Directiory: {working_dir}'''.format(system_version=self.system_version, task=task, working_dir=self.environment.working_dir)
+        Current Working Directiory: {working_dir}""".format(
+            system_version=self.system_version,
+            task=task,
+            working_dir=self.environment.working_dir,
+        )
 
         message = [
             {"role": "system", "content": light_planner_sys_prompt},
@@ -98,15 +105,24 @@ Currently, supported languages include Python and Bash."
                 result = self.execute_tool(code, lang)
                 rich_print(result)
             else:
-                result = ''
+                result = ""
 
-            if result != '':
-                light_exec_user_prompt = 'The result after executing the code: {result}'.format(result=result)
+            if result != "":
+                light_exec_user_prompt = (
+                    "The result after executing the code: {result}".format(
+                        result=result
+                    )
+                )
                 message.append({"role": "user", "content": light_exec_user_prompt})
             else:
-                message.append({"role": "user", "content": "Please continue. If all tasks have been completed, reply with 'Execution Complete'. If you believe subsequent tasks cannot continue, reply with 'Execution Interrupted', including the reasons why the tasks cannot proceed, and provide the user with some possible solutions."})
+                message.append(
+                    {
+                        "role": "user",
+                        "content": "Please continue. If all tasks have been completed, reply with 'Execution Complete'. If you believe subsequent tasks cannot continue, reply with 'Execution Interrupted', including the reasons why the tasks cannot proceed, and provide the user with some possible solutions.",
+                    }
+                )
 
-            if 'Execution Complete' in response or 'Execution Interrupted' in response:
+            if "Execution Complete" in response or "Execution Interrupted" in response:
                 break
 
 

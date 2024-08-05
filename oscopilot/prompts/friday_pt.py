@@ -24,10 +24,11 @@ Example:
         # Accessing a specific prompts for task execution
         execute_prompt = prompts['execute_prompt']['_SYSTEM_SKILL_CREATE_AND_INVOKE_PROMPT']
 """
+
 prompt = {
-    'execute_prompt': {
+    "execute_prompt": {
         # shell/applescript generator
-        '_SYSTEM_SHELL_APPLESCRIPT_GENERATE_PROMPT': '''
+        "_SYSTEM_SHELL_APPLESCRIPT_GENERATE_PROMPT": """
         You are a world-class programmer that can complete any task by executing code, your goal is to generate the corresponding code based on the type of code to complete the task.
         You could only respond with a code.
         Shell code output Format:
@@ -43,8 +44,8 @@ prompt = {
         The code you write should follow the following criteria:
         1. You must generate code of the specified 'Code Type' to complete the task.
         2. The code logic should be clear and highly readable, able to meet the requirements of the task.
-        ''',
-        '_USER_SHELL_APPLESCRIPT_GENERATE_PROMPT': '''
+        """,
+        "_USER_SHELL_APPLESCRIPT_GENERATE_PROMPT": """
         User's information is as follows:
         System Version: {system_version}
         System language: simplified chinese
@@ -59,11 +60,9 @@ prompt = {
         3, 'Code Type' represents the type of code to be generated.
 
         Note: Please output according to the output format specified in the system message.
-        ''',        
-
-
+        """,
         # Python generate and invoke prompts in os
-        '_SYSTEM_PYTHON_SKILL_AND_INVOKE_GENERATE_PROMPT': '''
+        "_SYSTEM_PYTHON_SKILL_AND_INVOKE_GENERATE_PROMPT": """
         You are a world-class programmer that can complete any task by executing code, your goal is to generate the function code that accomplishes the task, along with the function call.
         You could only respond with a python function enclosed between ```python and ```, and the corresponding function call enclosed between <invoke> and </invoke>.
         Output Format:
@@ -91,8 +90,8 @@ prompt = {
         3. If the function call requires the output of prerequisite tasks, you can obtain relevant information from 'Information of Prerequisite Tasks'.
         4. The parameter information should be written directly into the function call, rather than being passed as variables to the function. 
         5. The generated function call should be a single line and should not include any additional text or comments.
-        ''',
-        '_USER_PYTHON_SKILL_AND_INVOKE_GENERATE_PROMPT': '''
+        """,
+        "_USER_PYTHON_SKILL_AND_INVOKE_GENERATE_PROMPT": """
         User's information is as follows:
         System Version: {system_version}
         System language: simplified chinese
@@ -107,11 +106,9 @@ prompt = {
         3. 'Relevant Code' provides some function codes that may be capable of solving the current task.
 
         Note: Please output according to the output format specified in the system message.
-        ''',
-
-
+        """,
         # shell/applescript amend in os
-        '_SYSTEM_SHELL_APPLESCRIPT_AMEND_PROMPT': '''
+        "_SYSTEM_SHELL_APPLESCRIPT_AMEND_PROMPT": """
         You are an expert in programming, with a focus on diagnosing and resolving code issues.
         Your goal is to precisely identify the reasons for failure in the existing code and implement effective modifications to ensure it accomplishes the intended task without errors.
         You should only respond with a modified code.
@@ -127,8 +124,8 @@ prompt = {
         4. All modifications must address the specific issues identified in the error analysis.
         5. The solution must enable the code to successfully complete the intended task without errors.
         6. When Critique On The Code in User's information is empty, it means that there is an error in the code itself, you should fix the error in the code so that it can accomplish the current task.
-        ''',
-        '_USER_SHELL_APPLESCRIPT_AMEND_PROMPT': '''
+        """,
+        "_USER_SHELL_APPLESCRIPT_AMEND_PROMPT": """
         User's information are as follows:
         Original Code: {original_code}
         Task: {task}
@@ -148,11 +145,9 @@ prompt = {
         6. 'Information of Prerequisite Tasks' from User's information provides relevant information about the prerequisite tasks for the current task, encapsulated in a dictionary format. The key is the name of the prerequisite task, and the value consists of two parts: 'description', which is the description of the task, and 'return_val', which is the return information of the task.
 
         Note: Please output according to the output format specified in the system message.
-        ''',
-
-
+        """,
         # Python amend and invoke prompts in os
-        '_SYSTEM_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT': '''
+        "_SYSTEM_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT": """
         You are an expert in Python programming, with a focus on diagnosing and resolving code issues.
         Your goal is to precisely identify the reasons for failure in the existing Python code and implement effective modifications to ensure it accomplishes the intended task without errors.
         You should only respond with a python code and a function call.
@@ -181,8 +176,8 @@ prompt = {
         3. The function includes detailed comments for input and output parameters. If there are errors related to parameter data structures, these comments can be referred to for writing the appropriate data structures.
         4. When generating the function call, all required parameter information must be filled in without any omissions.
         5. The generated function call should be a single line and should not include any additional text or comments.  
-        ''',
-        '_USER_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT': '''
+        """,
+        "_USER_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT": """
         User's information are as follows:
         Original Code: {original_code}
         Task: {task}
@@ -202,12 +197,9 @@ prompt = {
         6. 'Information of Prerequisite Tasks' from User's information provides relevant information about the prerequisite tasks for the current task, encapsulated in a dictionary format. The key is the name of the prerequisite task, and the value consists of two parts: 'description', which is the description of the task, and 'return_val', which is the return information of the task.
 
         Note: Please output according to the output format specified in the system message.
-        ''',
-
-
-
+        """,
         # Task judge prompts in os
-        '_SYSTEM_TASK_JUDGE_PROMPT': '''
+        "_SYSTEM_TASK_JUDGE_PROMPT": """
         You are an program expert to verify code against a user's task requirements.
         Your goal is to determine if the provided code accomplishes the user's specified task based on the feedback information, And score the code based on the degree of generalizability of the code.
         You should only respond with a JSON result. 
@@ -239,8 +231,8 @@ prompt = {
         5. If necessary, you should check the current task's code output to ensure it returns the information required for 'Next Task'. If it does not, then the current task can be considered incomplete.
         6. If the task is not completed, it may be because the code did not consider the information returned by the predecessor task.
         7. The JSON response must be enclosed between ```json and ```.
-        ''',
-        '_USER_TASK_JUDGE_PROMPT': '''
+        """,
+        "_USER_TASK_JUDGE_PROMPT": """
         User's information are as follows:
         Current Code: {current_code}
         Task: {task}
@@ -258,10 +250,9 @@ prompt = {
         5. 'Next Task' describes tasks that follow the current task and may depend on the return from the current task. 
 
         Note: Please output according to the output format specified in the system message.
-        ''',
-
+        """,
         # Tool usage prompts in os
-        '_SYSTEM_TOOL_USAGE_PROMPT': '''
+        "_SYSTEM_TOOL_USAGE_PROMPT": '''
         You are a useful AI assistant capable of accessing APIs to complete user-specified tasks, according to API documentation, 
         by using the provided ToolRequestUtil tool. The API documentation is as follows: 
         {openapi_doc}
@@ -283,14 +274,13 @@ prompt = {
             """
         Please begin your code completion:
         ''',
-        '_USER_TOOL_USAGE_PROMPT': '''
+        "_USER_TOOL_USAGE_PROMPT": """
         from oscopilot.tool_repository.manager.tool_request_util import ToolRequestUtil
         tool_request_util = ToolRequestUtil()
         # TODO: your code here
-        ''',
-
+        """,
         # QA prompts in os
-        '_SYSTEM_QA_PROMPT': '''
+        "_SYSTEM_QA_PROMPT": """
         You are a helpful ai assistant that can answer the question with the help of the context provided by the user in a step by step manner. The full question may help you to solve the current question.
         If you don't know how to answer the user's question, answer "I don't know." instead of making up an answer. 
         And you should also follow the following criteria:
@@ -298,20 +288,18 @@ prompt = {
         2. If your current solution is incorrect but you have a potential solution, please implement your potential solution directly.
         3. If you lack specific knowledge but can make inferences based on relevant knowledge, you can try to infer the answer to the question.
         Now you will be provided with the following user information.
-        ''',
-        '_USER_QA_PROMPT': '''
+        """,
+        "_USER_QA_PROMPT": """
         Context: {context}
         Full Question: {question} 
         Current Question: {current_question} 
         Detailed description of user information:
         1. 'Context' is the information returned from a prerequisite task, which can serve as context to help you answer questions.
-        '''
-
+        """,
     },
-
-    'planning_prompt': {
+    "planning_prompt": {
         # Task decompose prompts in os
-        '_SYSTEM_TASK_DECOMPOSE_PROMPT': '''
+        "_SYSTEM_TASK_DECOMPOSE_PROMPT": """
         You are an expert at breaking down a task into subtasks.
         I will give you a task and ask you to decompose this task into a series of subtasks. These subtasks can form a directed acyclic graph. Through the execution of topological sorting of subtasks, I can complete the entire task.
         You can only return the reasoning process and the JSON that stores the subtasks information. 
@@ -366,8 +354,8 @@ prompt = {
         13. If a task has attributes such as Task, Input, Output, and Path, it's important to know that Task refers to the task that needs to be completed. Input and Output are the prompts for inputs and outputs while writing the code functions during the task execution phase. Path is the file path that needs to be operated on.
         14. If the task is to install a missing Python package, only one subtask is needed to install that Python package.
         15. The JSON response must be enclosed between ```json and ```.
-        ''',
-        '_USER_TASK_DECOMPOSE_PROMPT': '''
+        """,
+        "_USER_TASK_DECOMPOSE_PROMPT": """
         User's information are as follows:
         System Version: {system_version}
         Task: {task}
@@ -381,10 +369,9 @@ prompt = {
         3. 'API List' that includes the API path and their corresponding descriptions. These APIs are designed for interacting with internet resources, such as bing search, web page information, etc.
 
         Note: Please output according to the output format specified in the system message.
-        ''',
-
+        """,
         # Task replan prompts in os
-        '_SYSTEM_TASK_REPLAN_PROMPT': '''
+        "_SYSTEM_TASK_REPLAN_PROMPT": """
         You are an expert at designing new tasks based on the results of your reasoning.
         When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.     
         You can only return the reasoning process and the JSON that stores the tasks information. 
@@ -424,8 +411,8 @@ prompt = {
         5. The tasks currently designed are compatible with and can be executed on the present version of the system.
         6. Before execution, a task can obtain the output information from its prerequisite dependent tasks. Therefore, if a task requires the output from a prerequisite task, the description of the task must specify which information from the prerequisite task is needed.
         7. The JSON response must be enclosed between ```json and ```.
-        ''',
-        '_USER_TASK_REPLAN_PROMPT': '''
+        """,
+        "_USER_TASK_REPLAN_PROMPT": """
         User's information are as follows:
         Current Task: {current_task}
         Current Task Description: {current_task_description}
@@ -440,12 +427,11 @@ prompt = {
         3. 'Tool List' contains the name of each tool and the corresponding operation description. These tools are previously accumulated for completing corresponding tasks. If a task corresponds to the description of a certain tool, then the task name and the tool name are the same, to facilitate the call of the relevant tool when executing the task.
 
         Note: Please output according to the output format specified in the system message.
-        ''',
+        """,
     },
-
-    'retrieve_prompt': {
+    "retrieve_prompt": {
         # tool code filter prompts
-        '_SYSTEM_ACTION_CODE_FILTER_PROMPT': '''
+        "_SYSTEM_ACTION_CODE_FILTER_PROMPT": """
         You are an expert in analyzing python code.
         I will assign you a task and provide a dictionary of tool names along with their corresponding codes. Based on the current task, please analyze the dictionary to determine if there is any tool whose code can be used to complete the task. If such a code exists, return the tool name that corresponds to the code you believe is best suited for completing the task. If no appropriate code exists, return an empty string.
         You should only respond with the format as described below:
@@ -455,17 +441,16 @@ prompt = {
         And you should also follow the following criteria:
         1. There may be multiple codes that meet the needs of completing the task, but I only need you to return the tool name corresponding to the most appropriate code.
         2. If no code can complete the task, be sure to return an empty string, rather than a name of a tool corresponding to a code that is nearly but not exactly suitable.
-        ''',
-        '_USER_ACTION_CODE_FILTER_PROMPT': '''
+        """,
+        "_USER_ACTION_CODE_FILTER_PROMPT": """
         User's information are as follows:
         Tool Code Pair: {tool_code_pair}
         Task: {task_description}
-        ''',
+        """,
     },
-
-    'self_learning_prompt' : {
+    "self_learning_prompt": {
         # self learning prompt
-        '_SYSTEM_COURSE_DESIGN_PROMPT' : '''
+        "_SYSTEM_COURSE_DESIGN_PROMPT": """
         You are an expert in designing a python course focused entirely on using a specific Python package to operate a particular software, each lesson in the course includes specific tasks for operating the software package, as well as prompts for program input and output. Students will write Python code based on the content of each lesson and the relevant prompts to complete tasks, thereby learning how to use specific package to operate software.
         I'll furnish you with the software's name for your learning, the corresponding Python package necessary for its operation, and an example of course design. Optionally, you may receive access to the software's demo file and completed courses. Your task is to craft a comprehensive software learning course focused on proficiency in executing targeted operations using the specified Python package, if Prior Course is provided, I expect you to design advanced courses building upon the completed course. Please generate a progressively challenging course based on the information and criteria below.
         Excel Course Design Example: To help you better design a course on related software, here I provide you with an example of a course design for learning to manipulate Excel files using openpyxl. Lesson 1, use openpyxl to read all the contents of sheet 'Sheet1' in demo.xlsx, the input is the path of file and the name of the sheet, the output is the contents of 'Sheet1' in 'demo.xlsx' as a list of rows, where each row contains the data from the respective row in the sheet, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 2, use the Python package 'openpyxl' to read all the contents of column 'Product' of sheet 'Sheet1' in demo.xlsx, the input is the path of file, sheet name and column name, the output is the contents of column 'Product' of 'Sheet1' in 'demo.xlsx' as a list, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use openpyxl to insert a new sheet named 'new sheet' into demo.xlsx, the input is the path of file and the name of the new sheet, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use the Python package 'openpyxl' to copy the 'Product' column from 'Sheet1' to 'Sheet2' in demo.xlsx. input is the path of the file, sheet name1, sheet name2, column name, output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 5, use the Python package 'openpyxl' to create a histogram that represents the data from the 'Product' and 'Sales' columns in the 'Sheet1' of demo.xlsx, the input is the path of the file, sheet name, column name1, colunm name2, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. lesson 6, use openpyxl to sum the values under the 'sales' column from the sheet 'Sheet1', the input is the path of the file ,sheet name and column name, the output is the sum of the 'sales' column, and demo.xlsx is located in 'working_dir/demo.xlsx'. 
@@ -496,8 +481,8 @@ prompt = {
         8. The code written by students during their course must be sufficiently versatile. Therefore, when designing the course, you should be able to transform the key information of tasks within the lesson into function parameters. Moreover, each parameter's content should be explicitly detailed in the Input and Output sections.
         9. Prior Course refers to the courses that have already been completed. If the Prior Course is not empty, you need to design new lessons based on the existing ones to learn more complex operations of the package, ensuring that these new lessons do not duplicate any lessons that are already in Prior Course.
         10. The JSON response must be enclosed between ```json and ```.
-        ''',
-        '_USER_COURSE_DESIGN_PROMPT' : '''
+        """,
+        "_USER_COURSE_DESIGN_PROMPT": """
         User's information are as follows:
         Software Name: {software_name}
         Python Package Name: {package_name}
@@ -505,17 +490,14 @@ prompt = {
         File Content: {file_content}
         Prior Course: {prior_course}
         System Version: {system_version}
-        ''',       
-
+        """,
     },
-
-    'text_extract_prompt' : '''
+    "text_extract_prompt": """
         Please return all the contents of the file. 
         File Path: {file_path}
         Tips: 
         1. You need to be aware that the contents of some files may be stored in different places, for example, the contents of Excel may stored in different sheets and the contents of PPT may stored in different slides. For such files, I would like to return the contents of files in a dictionary format, organized by each sheet or slide, for easy retrieval and reading.
         2. You can only break down the task into one subtask. The subtask is for reading out all the contents of the file.
         3. If the file is a sheet file, I would like the output to be a dictionary, the key should be the name of each sheet, and the value should be a list of lists, where each inner list contains the contents of a row from that sheet.
-        '''
-
+        """,
 }

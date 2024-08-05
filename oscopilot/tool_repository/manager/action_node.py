@@ -12,6 +12,7 @@ class ActionNode:
         _status (bool): The execution status of the action, indicating whether it has been successfully executed.
         _type (str): The type of the action, categorizing its purpose or method of execution.
     """
+
     def __init__(self, name, description, node_type):
         """
         Initializes an instance of the ActionNode class with the given attributes.
@@ -23,7 +24,7 @@ class ActionNode:
         """
         self._name = name
         self._description = description
-        self._return_val = ''
+        self._return_val = ""
         self._relevant_code = {}
         self._next_action = {}
         self._status = False
@@ -47,7 +48,7 @@ class ActionNode:
         Returns:
             str: The action's description.
         """
-        return self._description   
+        return self._description
 
     @property
     def return_val(self):
@@ -77,7 +78,7 @@ class ActionNode:
         Returns:
             bool: True if the action has been executed successfully, False otherwise.
         """
-        return self._status  
+        return self._status
 
     @property
     def node_type(self):
@@ -87,7 +88,7 @@ class ActionNode:
         Returns:
             str: The action's type.
         """
-        return self._type 
+        return self._type
 
     @property
     def next_action(self):
@@ -97,7 +98,7 @@ class ActionNode:
         Returns:
             dict: A mapping of subsequent actions.
         """
-        return self._next_action   
+        return self._next_action
 
     def __str__(self):
         """
@@ -109,6 +110,6 @@ class ActionNode:
         return f"name: {self.name} \n description: {self.description} \n return: {self.return_val} \n relevant_action: {self._relevant_code} \n next_action: {self.next_action} \n status: {self.status} \n type: {self.node_type}"
 
 
-if __name__ == '__main__':
-    node = ActionNode('temp','xxx')
+if __name__ == "__main__":
+    node = ActionNode("temp", "xxx")
     print(node.name)
