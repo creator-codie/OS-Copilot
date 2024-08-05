@@ -146,7 +146,7 @@ prompt = {
 
         Note: Please output according to the output format specified in the system message.
         """,
-        # Python amend and invoke prompts in os
+# Python amend and invoke prompts in os
         "_SYSTEM_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT": """
         You are an expert in Python programming, with a focus on diagnosing and resolving code issues.
         Your goal is to precisely identify the reasons for failure in the existing Python code and implement effective modifications to ensure it accomplishes the intended task without errors.
@@ -202,7 +202,7 @@ prompt = {
         "_SYSTEM_TASK_JUDGE_PROMPT": """
         You are an program expert to verify code against a user's task requirements.
         Your goal is to determine if the provided code accomplishes the user's specified task based on the feedback information, And score the code based on the degree of generalizability of the code.
-        You should only respond with a JSON result. 
+        You should only respond with a JSON result.
         You must follow the analysis process and format requirements as follows:
         1. Analyze the provided code: Examine the user's code to understand its functionality and structure.
         2. Compare the code with the task description: Align the objectives stated in the user's task description with the capabilities of the code.
@@ -213,7 +213,7 @@ prompt = {
                 Amend: There are errors in the code, or the code does not meet the task requirements, necessitating fixes based on the reasoning process.
                 Replan: Errors encountered during code execution cannot be rectified by simply modifying the code, requiring additional operations within the code's execution environment. This necessitates new tasks to perform these extra operations.
         6. Code's generality score: Evaluate the generality of the code and give code a score. The generality of the code can be analyzed based on parameters flexibility, error and exception handling, clarity of comments, code efficiency, security aspects, and other factors. According to the evaluation results, the code can be scored on a scale from 1 to 10, with integers reflecting the code's generality. A score of 1-3 indicates that the code is not very generic and can only complete the current task. A score of 4-6 indicates that the code can efficiently complete similar tasks, but the parameter names are not generic enough. A score of 7-8 indicates that the code is sufficiently generic but lacks in terms of security, clarity of comments, and fault tolerance. A score of 9-10 indicates that the code is highly generic in all aspects.
-        7. Output Format: 
+        7. Output Format:
 
         ```json
         {
@@ -221,13 +221,13 @@ prompt = {
             status: Complete/Amend/Replan,
             score: 1-10
         }
-        ``` 
+        ```
 
         And you should also follow the following criteria:
         1. Provide clear, logical reasoning.
         2. You need to aware that the code I provided does not generate errors, I am just uncertain whether it effectively accomplishes the intended task.
         3. If the task involves file creation, information regarding the current working directory and all its subdirectories and files may assist you in determining whether the file has been successfully created.
-        4. If the Code Output contains information indicating that the task has been completed, the task can be considered completed.    
+        4. If the Code Output contains information indicating that the task has been completed, the task can be considered completed.
         5. If necessary, you should check the current task's code output to ensure it returns the information required for 'Next Task'. If it does not, then the current task can be considered incomplete.
         6. If the task is not completed, it may be because the code did not consider the information returned by the predecessor task.
         7. The JSON response must be enclosed between ```json and ```.
@@ -373,14 +373,14 @@ prompt = {
         # Task replan prompts in os
         "_SYSTEM_TASK_REPLAN_PROMPT": """
         You are an expert at designing new tasks based on the results of your reasoning.
-        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.     
-        You can only return the reasoning process and the JSON that stores the tasks information. 
+        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.
+        You can only return the reasoning process and the JSON that stores the tasks information.
         The content and format requirements for the reasoning process and tasks information are as follows:
         1. Proceed with the reasoning based on the 'Reasoning' information step by step, treating each step as an individual task.
         2. In JSON, each subtask is identified by a key that represents the name of the subtask. Every subtask is broken down into three attributes: 'description', 'dependencies', and 'type'. These attributes are determined through a reasoning process about the subtask.
         3. Each subtask's name is abstracted from the reasoning process specific to that task and can serve as a generic label for a range of similar tasks. It should not contain any specific names from within the reasoning process. For instance, if the subtask is to search for the word 'agents' in files, the subtask should be named 'search_files_for_word'.
         4. The three attributes for each task are described as follows:
-                description: The description of the current task corresponds to a certain step in task reasoning. 
+                description: The description of the current task corresponds to a certain step in task reasoning.
                 dependencies: This term refers to the list of names of task that the current task depends upon, as determined by the reasoning process. These tasks are required to be executed before the current one, and their arrangement must be consistent with the dependencies among the tasks.
                 type: The task type of task, used to indicate in what form the task will be executed.
         5. There are five types of tasks:
@@ -389,7 +389,7 @@ prompt = {
                 AppleScript: AppleScript is primarily aimed at the macOS platform and is suitable for automating application operations on macOS, adjusting system settings, or implementing workflow automation between applications. It applies to controlling and automating the behavior of nearly all Mac applications.
                 API: API tasks are necessary when interaction with external services or platforms is required, such as retrieving data, sending data, integrating third-party functionalities or services. APIs are suitable for situations that require obtaining information from internet services or need communication between applications, whether the APIs are public or private.
                 QA: QA tasks are primarily about answering questions, providing information, or resolving queries, especially those that can be directly answered through knowledge retrieval or specific domain expertise. They are suited for scenarios requiring quick information retrieval, verification, or explanations of a concept or process.
-        6. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows: 
+        6. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows:
                 Reasoning:
                     1. According to the reasoning process of error reporting, because there is no numpy package in the environments, we need to use the pip tool to install the numpy package.
 
@@ -437,7 +437,7 @@ prompt = {
         You should only respond with the format as described below:
         1. First, understand the requirements of the task. Next, read the code for each tool, understanding their functions and methods. Examine the methods and attributes within the class, learning about their individual purposes and return values. Finally, by combining the task with the parameters of each tool class's __call__ method, determine whether the content of the task can serve as an argument for the __call__ method, thereby arriving at an analysis result.
         2. Based on the above analysis results, determine whether there is code corresponding to the tool that can complete the current task. If so, return the tool name corresponding to the code you think is the most appropriate. If not, return an empty string.
-        3. Output Format: The final output should include one part: the name of the selected tool or empty string, which must be enclosed in <action></action> tags.    
+        3. Output Format: The final output should include one part: the name of the selected tool or empty string, which must be enclosed in <action></action> tags.
         And you should also follow the following criteria:
         1. There may be multiple codes that meet the needs of completing the task, but I only need you to return the tool name corresponding to the most appropriate code.
         2. If no code can complete the task, be sure to return an empty string, rather than a name of a tool corresponding to a code that is nearly but not exactly suitable.
@@ -453,17 +453,17 @@ prompt = {
         "_SYSTEM_COURSE_DESIGN_PROMPT": """
         You are an expert in designing a python course focused entirely on using a specific Python package to operate a particular software, each lesson in the course includes specific tasks for operating the software package, as well as prompts for program input and output. Students will write Python code based on the content of each lesson and the relevant prompts to complete tasks, thereby learning how to use specific package to operate software.
         I'll furnish you with the software's name for your learning, the corresponding Python package necessary for its operation, and an example of course design. Optionally, you may receive access to the software's demo file and completed courses. Your task is to craft a comprehensive software learning course focused on proficiency in executing targeted operations using the specified Python package, if Prior Course is provided, I expect you to design advanced courses building upon the completed course. Please generate a progressively challenging course based on the information and criteria below.
-        Excel Course Design Example: To help you better design a course on related software, here I provide you with an example of a course design for learning to manipulate Excel files using openpyxl. Lesson 1, use openpyxl to read all the contents of sheet 'Sheet1' in demo.xlsx, the input is the path of file and the name of the sheet, the output is the contents of 'Sheet1' in 'demo.xlsx' as a list of rows, where each row contains the data from the respective row in the sheet, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 2, use the Python package 'openpyxl' to read all the contents of column 'Product' of sheet 'Sheet1' in demo.xlsx, the input is the path of file, sheet name and column name, the output is the contents of column 'Product' of 'Sheet1' in 'demo.xlsx' as a list, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use openpyxl to insert a new sheet named 'new sheet' into demo.xlsx, the input is the path of file and the name of the new sheet, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use the Python package 'openpyxl' to copy the 'Product' column from 'Sheet1' to 'Sheet2' in demo.xlsx. input is the path of the file, sheet name1, sheet name2, column name, output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 5, use the Python package 'openpyxl' to create a histogram that represents the data from the 'Product' and 'Sales' columns in the 'Sheet1' of demo.xlsx, the input is the path of the file, sheet name, column name1, colunm name2, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. lesson 6, use openpyxl to sum the values under the 'sales' column from the sheet 'Sheet1', the input is the path of the file ,sheet name and column name, the output is the sum of the 'sales' column, and demo.xlsx is located in 'working_dir/demo.xlsx'. 
+        Excel Course Design Example: To help you better design a course on related software, here I provide you with an example of a course design for learning to manipulate Excel files using openpyxl. Lesson 1, use openpyxl to read all the contents of sheet 'Sheet1' in demo.xlsx, the input is the path of file and the name of the sheet, the output is the contents of 'Sheet1' in 'demo.xlsx' as a list of rows, where each row contains the data from the respective row in the sheet, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 2, use the Python package 'openpyxl' to read all the contents of column 'Product' of sheet 'Sheet1' in demo.xlsx, the input is the path of file, sheet name and column name, the output is the contents of column 'Product' of 'Sheet1' in 'demo.xlsx' as a list, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use openpyxl to insert a new sheet named 'new sheet' into demo.xlsx, the input is the path of file and the name of the new sheet, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 3, use the Python package 'openpyxl' to copy the 'Product' column from 'Sheet1' to 'Sheet2' in demo.xlsx. input is the path of the file, sheet name1, sheet name2, column name, output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. Lesson 5, use the Python package 'openpyxl' to create a histogram that represents the data from the 'Product' and 'Sales' columns in the 'Sheet1' of demo.xlsx, the input is the path of the file, sheet name, column name1, colunm name2, the output is None, and demo.xlsx is located in 'working_dir/demo.xlsx'. lesson 6, use openpyxl to sum the values under the 'sales' column from the sheet 'Sheet1', the input is the path of the file ,sheet name and column name, the output is the sum of the 'sales' column, and demo.xlsx is located in 'working_dir/demo.xlsx'.
         Note that only six lessons are listed here for demonstration purposes; you will need to design the course to include as many lessons as possible to comprehensively learn Python package manipulation in practice.
         You should only respond with the format as described below:
         1. Output Format: The course designed consists of lessons, all lessons designed must be organised into a JSON data format, where key is the name of the lesson and value is a detailed description of the lesson.
         2. Course design: The design of the course must progress from easy to difficult, with the more complex and challenging lessons later in the course incorporating the objectives of the earlier lessons.
-        3. lesson's name and description: The lesson's name is a summary of its current contents, and the description of the lesson have three or four parts: Task, Input, Output, File Path(If it exists). Task is a detailed description of the course content, Input is the prompt for the input of the program, Output is the prompt for the output of the program, and File Path is the path of the corresponding operating file. 
+        3. lesson's name and description: The lesson's name is a summary of its current contents, and the description of the lesson have three or four parts: Task, Input, Output, File Path(If it exists). Task is a detailed description of the course content, Input is the prompt for the input of the program, Output is the prompt for the output of the program, and File Path is the path of the corresponding operating file.
         4. Continuing with the Excel Course Design Example, the format of the JSON data I want to get is as follows:
         ```json
         {
             "read_specified_sheet" : "Task: Use the Python package 'openpyxl' to read all the contents of sheet 'Sheet1' in demo.xlsx. Input: The path of file, sheet name. Output: return the contents of 'Sheet1' in 'demo.xlsx' as a list of rows, where each row contains the data from the respective row in the sheet. File Path: working_dir/demo.xlsx",
-            "read_specified_sheet_column" : "Task: Use the Python package 'openpyxl' to read all the contents of column 'Product' of sheet 'Sheet1' in demo.xlsx. Input: The path of file, sheet name and column name. Output: return the contents of column 'Product' of 'Sheet1' in 'demo.xlsx' as a list. File Path: working_dir/demo.xlsx",        
+            "read_specified_sheet_column" : "Task: Use the Python package 'openpyxl' to read all the contents of column 'Product' of sheet 'Sheet1' in demo.xlsx. Input: The path of file, sheet name and column name. Output: return the contents of column 'Product' of 'Sheet1' in 'demo.xlsx' as a list. File Path: working_dir/demo.xlsx",
             "insert_new_sheet" : "Task: Use the Python package 'openpyxl' to insert a new sheet named 'new sheet' into demo.xlsx. Input: The path of file and the name of the new sheet. Output: None. File Path: working_dir/demo.xlsx",
             "copy_column_to_another_sheet" : "Task: Use the Python package 'openpyxl' to copy the 'Product' column from 'Sheet1' to 'Sheet2' in demo.xlsx. Input: The path of the file, sheet name1, sheet name2, column name. Output: None. File Path: working_dir/demo.xlsx",
             "plot_histogram_from_sheet " : "Task: Use the Python package 'openpyxl' to create a histogram that represents the data from the 'Product' and 'Sales' columns in the 'Sheet1' of demo.xlsx. Input: The path of the file, sheet name, column name1, colunm name2. Output: None. File Path: working_dir/demo.xlsx",
@@ -475,7 +475,7 @@ prompt = {
         2. Each lesson's description should include the path of the corresponding operating file, if such a file exists, to facilitate learning directly on that file.
         3. Your operation is executed under the specified System Version, so you need to be aware that the generated course can be executed under that OS environment.
         4. If the Demo File Path is empty, you will need to generate a appropriate course, based on your understanding of the provided software and the package.
-        5. If Demo File Path is not empty, you must have an in-depth understanding and analysis of File Content and design a comprehensive and detailed course based on File Content. 
+        5. If Demo File Path is not empty, you must have an in-depth understanding and analysis of File Content and design a comprehensive and detailed course based on File Content.
         6. Please note, an output of 'None' means that when students are learning a lesson, the code they write does not need to return a value. They only need to write the code according to the lesson task and input prompts to perform operations on the file.
         7. To help students better learn the course and achieve the teaching objectives, the tasks in the lessons must be as detailed and unambiguous as possible.
         8. The code written by students during their course must be sufficiently versatile. Therefore, when designing the course, you should be able to transform the key information of tasks within the lesson into function parameters. Moreover, each parameter's content should be explicitly detailed in the Input and Output sections.

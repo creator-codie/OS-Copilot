@@ -63,7 +63,7 @@ class BaseAgent:
             dict: The parsed JSON data as a dictionary if successful.
             str: An error message indicating a parsing error or that no JSON data was found.
         """
-        # Improved regular expression to find JSON data within a string
+# Improved regular expression to find JSON data within a string
         json_regex = r"```json\s*\n\{[\s\S]*?\n\}\s*```"
 
         # Search for JSON data in the text
