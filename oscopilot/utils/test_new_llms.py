@@ -113,7 +113,7 @@ def merge_deltas(original, delta):
     """
 
     for key, value in dict(delta).items():
-        if value != None:
+        if value is not None:
             if isinstance(value, str):
                 if key in original:
                     original[key] = (original[key] or "") + (value or "")
@@ -264,7 +264,7 @@ def run_text_llm(llm, params):
 
         content = chunk["choices"][0]["delta"].get("content", "")
 
-        if content == None:
+        if content is None:
             continue
 
         accumulated_block += content
@@ -290,9 +290,9 @@ def run_text_llm(llm, params):
 
                 # Default to python if not specified
                 if language == "":
-                    if llm.interpreter.os == False:
+                    if llm.interpreter.os is False:
                         language = "python"
-                    elif llm.interpreter.os == False:
+                    elif llm.interpreter.os is False:
                         # OS mode does this frequently. Takes notes with markdown code blocks
                         language = "text"
                 else:
@@ -422,7 +422,7 @@ def convert_to_openai_messages(
                         )
 
         elif message["type"] == "image":
-            if vision == False:
+            if vision is False:
                 continue
 
             if "base64" in message["format"]:
@@ -595,7 +595,7 @@ class Llm:
             ), "No message after the first can have the role 'system'"
 
         # Detect function support
-        if self.supports_functions != None:
+        if self.supports_functions is not None:
             supports_functions = self.supports_functions
         else:
             # Guess whether or not it's a function calling LLM

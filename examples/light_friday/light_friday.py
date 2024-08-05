@@ -52,9 +52,9 @@ class LightFriday(BaseModule):
     def execute_tool(self, code, lang):
         state = self.environment.step(lang, code)  # node_type
         return_info = ''
-        if state.result != None and state.result.strip() != '':
+        if state.result is not None and state.result.strip() != '':
             return_info = '**Execution Result** :' + state.result.strip()
-        if state.error != None and state.error.strip() != '':
+        if state.error is not None and state.error.strip() != '':
             return_info = '\n**Execution Error** :' + state.error.strip()
         return return_info.strip()
 

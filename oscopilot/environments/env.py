@@ -104,7 +104,7 @@ class Env(BaseEnv):
         #             display=self.computer.verbose,
         #         )
 
-        if stream == False:
+        if stream is False:
             # If stream == False, *pull* from _streaming_run.
             output_messages = []
             for chunk in self._streaming_run(language, code, display=display):
@@ -120,7 +120,7 @@ class Env(BaseEnv):
                         output_messages.append(chunk)
             return output_messages
 
-        elif stream == True:
+        elif stream is True:
             # If stream == True, replace this with _streaming_run.
             return self._streaming_run(language, code, display=display)
 

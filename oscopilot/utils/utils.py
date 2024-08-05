@@ -373,7 +373,7 @@ def GAIA_postprocess(question, response):
 
 class GAIALoader:
     def __init__(self, level=1, cache_dir=None):
-        if cache_dir != None:
+        if cache_dir is not None:
             if not os.path.exists(cache_dir):
                 raise AssertionError(f"Cache directory {cache_dir} does not exist.")
             self.cache_dir = cache_dir

@@ -584,7 +584,7 @@ class FridayExecutor(BaseModule):
         ("allOf" in findptr["requestBody"]["content"]["multipart/form-data"]["schema"]) and 
         ("$ref" in findptr["requestBody"]["content"]["multipart/form-data"]["schema"]["allOf"][0])):
             api_params_schema_ref = findptr["requestBody"]["content"]["multipart/form-data"]["schema"]["allOf"][0]["$ref"]
-        if api_params_schema_ref != None and api_params_schema_ref != "":
+        if api_params_schema_ref is not None and api_params_schema_ref != "":
             curr_api_doc["components"]["schemas"][api_params_schema_ref.split('/')[-1]] = self.open_api_doc["components"]["schemas"][api_params_schema_ref.split('/')[-1]]
         return curr_api_doc
 
