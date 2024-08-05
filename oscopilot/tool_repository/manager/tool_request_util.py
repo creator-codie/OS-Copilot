@@ -1,9 +1,11 @@
-import requests
 import os
+
+import requests
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path='.env', override=True)
-API_BASE_URL = os.getenv('API_BASE_URL') 
+load_dotenv(dotenv_path=".env", override=True)
+API_BASE_URL = os.getenv("API_BASE_URL")
+
 
 class ToolRequestUtil:
     """
@@ -18,15 +20,20 @@ class ToolRequestUtil:
         headers (dict): Default headers to be sent with each request.
         base_url (str): The base URL for the API endpoints.
     """
+
     def __init__(self):
         """
         Initializes the ToolRequestUtil with a session and default request headers.
         """
         self.session = requests.session()
-        self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+        }
         self.base_url = API_BASE_URL
 
-    def request(self, api_path, method, params=None, files=None, content_type="application/json"):
+    def request(
+        self, api_path, method, params=None, files=None, content_type="application/json"
+    ):
         """
         Sends a request to the specified API endpoint using the defined HTTP method.
 
@@ -52,16 +59,26 @@ class ToolRequestUtil:
         try:
             if method.lower() == "get":
                 if content_type == "application/json":
-                    result = self.session.get(url=url, json=params, headers=self.headers, timeout=60).json()
-                else: 
-                    result = self.session.get(url=url, params=params, headers=self.headers, timeout=60).json()
+                    result = self.session.get(
+                        url=url, json=params, headers=self.headers, timeout=60
+                    ).json()
+                else:
+                    result = self.session.get(
+                        url=url, params=params, headers=self.headers, timeout=60
+                    ).json()
             elif method.lower() == "post":
                 if content_type == "multipart/form-data":
-                    result = self.session.post(url=url, files=files, data=params, headers=self.headers).json()
+                    result = self.session.post(
+                        url=url, files=files, data=params, headers=self.headers
+                    ).json()
                 elif content_type == "application/json":
-                    result = self.session.post(url=url, json=params, headers=self.headers).json()
+                    result = self.session.post(
+                        url=url, json=params, headers=self.headers
+                    ).json()
                 else:
-                    result = self.session.post(url=url, data=params, headers=self.headers).json()
+                    result = self.session.post(
+                        url=url, data=params, headers=self.headers
+                    ).json()
             else:
                 print("request method error!")
                 return None

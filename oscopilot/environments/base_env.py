@@ -1,6 +1,7 @@
 import os
+from typing import List, Optional, Union
+
 from oscopilot.utils.config import Config
-from typing import Optional, Union, List
 from oscopilot.utils.schema import EnvState
 
 
@@ -22,11 +23,13 @@ class BaseEnv:
         """
         self._name: str = self.__class__.__name__
         self.timeout: int = 300
-        working_dir = Config.get_parameter('working_dir')
+        working_dir = Config.get_parameter("working_dir")
         if os.path.isabs(working_dir):
             self.working_dir = working_dir
         else:
-            self.working_dir = os.path.abspath(os.path.join(__file__, "..", "..", "..", working_dir))
+            self.working_dir = os.path.abspath(
+                os.path.join(__file__, "..", "..", "..", working_dir)
+            )
         if not os.path.exists(self.working_dir):
             os.makedirs(self.working_dir)
 
@@ -83,14 +86,14 @@ class BaseEnv:
 
             # Check if it's a file or directory
             if os.path.isdir(full_path):
-                doc_type = 'Directory'
+                doc_type = "Directory"
             else:
-                doc_type = 'File'
+                doc_type = "File"
 
             details.append(f"{name}\t {size} bytes\t {doc_type}")
 
         return "\n".join(details)
-        
+
     def step(self, _command) -> EnvState:
         """
         Executes a command within the environments.
@@ -116,12 +119,14 @@ class BaseEnv:
         This method is intended to be implemented by subclasses, defining the specific
         actions required to reset the environments.
         """
-        working_dir = Config.get_parameter('working_dir')
+        working_dir = Config.get_parameter("working_dir")
         if os.path.isabs(working_dir):
             self.working_dir = working_dir
         else:
-            self.working_dir = os.path.abspath(os.path.join(__file__, "..", "..", "..", working_dir))
-    
+            self.working_dir = os.path.abspath(
+                os.path.join(__file__, "..", "..", "..", working_dir)
+            )
+
     @property
     def name(self):
         """
@@ -139,7 +144,7 @@ class BaseEnv:
         Returns:
             str: A representation of the environments, including its name.
         """
-        return f'{self.name}'
+        return f"{self.name}"
 
     def __str__(self):
         """
@@ -151,7 +156,7 @@ class BaseEnv:
         return self.__repr__()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     env = BaseEnv()
     env.env_state = EnvState()
     # result = env.observe()

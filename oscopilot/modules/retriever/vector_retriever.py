@@ -1,6 +1,7 @@
+import json
+
 from oscopilot.modules.base_module import BaseModule
 from oscopilot.utils.utils import send_chat_prompts
-import json
 
 
 class FridayRetriever(BaseModule):
@@ -30,7 +31,7 @@ class FridayRetriever(BaseModule):
         """
         self.tool_manager.delete_tool(tool)
 
-    def retrieve_tool_name(self, task, k=10):        
+    def retrieve_tool_name(self, task, k=10):
         """
         Retrieves a list of tool names relevant to the specified task.
 
@@ -63,16 +64,15 @@ class FridayRetriever(BaseModule):
         Returns:
             The code of the tool relevant to the specified task, or an empty string
             if no relevant tool is found.
-    """
+        """
         tool_code_pair = json.dumps(tool_code_pair)
-        sys_prompt = self.prompt['_SYSTEM_ACTION_CODE_FILTER_PROMPT']
-        user_prompt = self.prompt['_USER_ACTION_CODE_FILTER_PROMPT'].format(
-            task_description=task,
-            tool_code_pair=tool_code_pair
+        sys_prompt = self.prompt["_SYSTEM_ACTION_CODE_FILTER_PROMPT"]
+        user_prompt = self.prompt["_USER_ACTION_CODE_FILTER_PROMPT"].format(
+            task_description=task, tool_code_pair=tool_code_pair
         )
         response = send_chat_prompts(sys_prompt, user_prompt, self.llm)
-        tool_name = self.extract_information(response, '<action>', '</action>')[0]
-        code = ''
+        tool_name = self.extract_information(response, "<action>", "</action>")[0]
+        code = ""
         if tool_name:
             code = self.tool_manager.get_tool_code(tool_name)
         return code
@@ -91,8 +91,10 @@ class FridayRetriever(BaseModule):
         Returns:
             str: The description of the specified tool.
         """
-        retrieve_tool_description = self.tool_manager.retrieve_tool_description(tool_name)
-        return retrieve_tool_description  
+        retrieve_tool_description = self.tool_manager.retrieve_tool_description(
+            tool_name
+        )
+        return retrieve_tool_description
 
     def retrieve_tool_code(self, tool_name):
         """
@@ -108,8 +110,8 @@ class FridayRetriever(BaseModule):
             str: The code of the specified tool.
         """
         retrieve_tool_code = self.tool_manager.retrieve_tool_code(tool_name)
-        return retrieve_tool_code 
-    
+        return retrieve_tool_code
+
     def retrieve_tool_code_pair(self, retrieve_tool_name):
         """
         Retrieves a mapping of tool names to their respective codes for a list of tools.
@@ -128,8 +130,8 @@ class FridayRetriever(BaseModule):
         tool_code_pair = {}
         for name, description in zip(retrieve_tool_name, retrieve_tool_code):
             tool_code_pair[name] = description
-        return tool_code_pair        
-        
+        return tool_code_pair
+
     def retrieve_tool_description_pair(self, retrieve_tool_name):
         """
         Retrieves a mapping of tool names to their descriptions for a list of tools.
@@ -149,5 +151,3 @@ class FridayRetriever(BaseModule):
         for name, description in zip(retrieve_tool_name, retrieve_tool_description):
             tool_description_pair[name] = description
         return tool_description_pair
-
-

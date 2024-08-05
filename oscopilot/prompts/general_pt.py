@@ -1,5 +1,5 @@
 prompt = {
-    "GAIA_ANSWER_EXTRACTOR_PROMPT": '''
+    "GAIA_ANSWER_EXTRACTOR_PROMPT": """
     You are tasked as an answer extractor. Given specific questions and their corresponding responses, extract answers following the directives provided. Ensure answers are in the correct format as instructed:
 
     1. For numerical questions: Extract numerical values directly from the response.
@@ -67,5 +67,5 @@ prompt = {
     Question: {question}
     Response: {response}
     Answer:
-    '''
+    """
 }

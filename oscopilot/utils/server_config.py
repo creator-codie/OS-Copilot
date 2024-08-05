@@ -1,5 +1,6 @@
 import os
 
+
 class ConfigManager:
     """
     A singleton class responsible for managing configuration settings across the application.
@@ -13,6 +14,7 @@ class ConfigManager:
         http_proxy (str): The HTTP proxy URL.
         https_proxy (str): The HTTPS proxy URL.
     """
+
     _instance = None
 
     def __new__(cls):
@@ -62,4 +64,3 @@ class ConfigManager:
         """
         os.environ.pop("http_proxy", None)
         os.environ.pop("https_proxy", None)
-

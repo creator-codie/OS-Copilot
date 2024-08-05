@@ -1,7 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
 setup(
@@ -14,23 +13,18 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/OS-Copilot/OS-Copilot",
     license="MIT",
-
     packages=find_packages(exclude=("docs", "temp", "pic", "log")),
-
     install_requires=requirements,
-
     entry_points={
         "console_scripts": [
             "friday=quick_start:main",
         ],
     },
-
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     keywords="AI, LLMs, Large Language Models, Agent, OS, Operating System",
-
-    python_requires='>=3.10',
+    python_requires=">=3.10",
 )

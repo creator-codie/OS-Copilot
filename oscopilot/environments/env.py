@@ -1,11 +1,9 @@
 # This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
 
-from oscopilot.environments import BaseEnv
-from oscopilot.environments import AppleScript
-from oscopilot.environments import PythonJupyterEnv
-from oscopilot.environments import Shell
-from oscopilot.utils.schema import EnvState
 import subprocess
+
+from oscopilot.environments import AppleScript, BaseEnv, PythonJupyterEnv, Shell
+from oscopilot.utils.schema import EnvState
 
 # Should this be renamed to OS or System?
 
@@ -18,13 +16,14 @@ class Env(BaseEnv):
     those languages.
 
     It inherits from BaseEnv, which provides basic environment functionality.
-    """    
+    """
+
     def __init__(self):
         """
         Initializes the environment.
 
         Sets up the supported languages and initializes the active languages dictionary.
-        """        
+        """
         super().__init__()
         self.languages = [
             PythonJupyterEnv,
@@ -42,11 +41,12 @@ class Env(BaseEnv):
 
         Returns:
             class: The language class corresponding to the provided name or alias, or None if not found.
-        """        
+        """
         # 输入planner的节点类型即可
         for lang in self.languages:
             if language.lower() == lang.name.lower() or (
-                hasattr(lang, "aliases") and language.lower() in (alias.lower() for alias in lang.aliases)
+                hasattr(lang, "aliases")
+                and language.lower() in (alias.lower() for alias in lang.aliases)
             ):
                 return lang
         return None
@@ -63,19 +63,21 @@ class Env(BaseEnv):
 
         Returns:
             EnvState: The state after executing the code.
-        """        
+        """
         # 不用流式的话很简单，就是调一下lang的step就行了
         state = EnvState(command=code)
         lang = self.get_language(language)()  # 输入planner的节点类型即可
         for output_line_dic in lang.step(code):
-            if output_line_dic['format'] == 'active_line' or output_line_dic['content'] in ['', '\n']:
+            if output_line_dic["format"] == "active_line" or output_line_dic[
+                "content"
+            ] in ["", "\n"]:
                 continue
-            content = output_line_dic['content']
-            if 'Traceback' in content:
-                state.error = (state.error or '') + content
+            content = output_line_dic["content"]
+            if "Traceback" in content:
+                state.error = (state.error or "") + content
             else:
                 state.result += content
-        if lang.name == 'Python':
+        if lang.name == "Python":
             lang.terminate()
         # for output_line_dic in lang.step(code):
         #     if output_line_dic['format'] == 'active_line':
@@ -87,9 +89,11 @@ class Env(BaseEnv):
         #         else:
         #             state.result += content
         state.pwd = self.working_dir
-        state.ls = subprocess.run(['ls'], cwd=self.working_dir, capture_output=True, text=True).stdout
+        state.ls = subprocess.run(
+            ["ls"], cwd=self.working_dir, capture_output=True, text=True
+        ).stdout
         return state
-        
+
         # if (
         #     language == "python"
         #     and self.computer.import_computer_api
@@ -135,7 +139,7 @@ class Env(BaseEnv):
 
         Yields:
             dict: Output chunks generated during execution.
-        """        
+        """
         if language not in self._active_languages:
             # Get the language. Pass in self.computer *if it takes a single argument*
             # but pass in nothing if not. This makes custom languages easier to add / understand.
@@ -178,14 +182,14 @@ class Env(BaseEnv):
     def stop(self):
         """
         Stops the execution of all active languages.
-        """        
+        """
         for language in self._active_languages.values():
             language.stop()
 
     def terminate(self):
         """
         Terminates all active language environments.
-        """        
+        """
         for language_name in list(self._active_languages.keys()):
             language = self._active_languages[language_name]
             if (

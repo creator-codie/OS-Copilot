@@ -1,18 +1,18 @@
 # This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
 
 import ast
+import logging
 import os
-import sys
 import queue
 import re
+import sys
 import threading
 import time
 import traceback
-import logging
 
 from jupyter_client import KernelManager
-from oscopilot.environments.base_env import BaseEnv
 
+from oscopilot.environments.base_env import BaseEnv
 
 # turn off colors in "terminal"
 # os.environ["ANSI_COLORS_DISABLED"] = "1"
@@ -26,7 +26,8 @@ class PythonJupyterEnv(BaseEnv):
     executing code steps, handling output messages, and terminating the kernel.
 
     It inherits from BaseEnv, which provides basic environment functionality.
-    """    
+    """
+
     file_extension = "py"
     name = "Python"
     aliases = ["py", "API"]
@@ -36,23 +37,37 @@ class PythonJupyterEnv(BaseEnv):
         Initializes the Python Jupyter environment.
 
         This method sets up the IPython kernel manager and client, starts the kernel, and configures logging.
-        """        
+        """
         super().__init__()
-        ipkernel_logger = logging.getLogger('IPKernelApp')
+        ipkernel_logger = logging.getLogger("IPKernelApp")
 
         # Create a filter using a lambda function
-        warning_filter = lambda record: not any(msg in record.getMessage() for msg in [
-            "Parent appears to have exited, shutting down.",
-            "Could not destroy zmq context"
-        ])
+        def warning_filter(record):
+            return not any(
+                msg in record.getMessage()
+                for msg in [
+                    "Parent appears to have exited, shutting down.",
+                    "Could not destroy zmq context",
+                ]
+            )
+
         # Add the filter to the logger
         ipkernel_logger.addFilter(warning_filter)
 
         # Get the path to the current Python executable
         python_executable = sys.executable
-        
+
         # Ensure only one KernelManager instance is configured and started
-        self.km = KernelManager(kernel_name='python3', kernel_cmd=[python_executable, '-m', 'ipykernel_launcher', '-f', '{connection_file}'])
+        self.km = KernelManager(
+            kernel_name="python3",
+            kernel_cmd=[
+                python_executable,
+                "-m",
+                "ipykernel_launcher",
+                "-f",
+                "{connection_file}",
+            ],
+        )
         self.km.start_kernel(env=os.environ.copy())
         # self.km.start_kernel()
         self.kc = self.km.client()
@@ -60,7 +75,7 @@ class PythonJupyterEnv(BaseEnv):
         while not self.kc.is_alive():
             time.sleep(0.1)
         time.sleep(0.5)
-        '''
+        """
         ipkernel_logger = logging.getLogger('IPKernelApp')
         # Create a filter using a lambda function
         warning_filter = lambda record: not any(msg in record.getMessage() for msg in [
@@ -86,7 +101,7 @@ class PythonJupyterEnv(BaseEnv):
         while not self.kc.is_alive():
             time.sleep(0.1)
         time.sleep(0.5)
-        '''
+        """
         self.listener_thread = None
         self.finish_flag = False
 
@@ -94,24 +109,24 @@ class PythonJupyterEnv(BaseEnv):
         # Give it our same matplotlib backend
         # backend = matplotlib.get_backend()
 
-#         # Use Agg, which bubbles everything up as an image.
-#         # Not perfect (I want interactive!) but it works.
-#         backend = "Agg"
+    #         # Use Agg, which bubbles everything up as an image.
+    #         # Not perfect (I want interactive!) but it works.
+    #         backend = "Agg"
 
-#         code = f"""
-# import matplotlib
-# matplotlib.use('{backend}')
-#         """.strip()
-#         for _ in self.run(code):
-#             pass
+    #         code = f"""
+    # import matplotlib
+    # matplotlib.use('{backend}')
+    #         """.strip()
+    #         for _ in self.run(code):
+    #             pass
 
-        # DISABLED because it doesn't work??
-        # Disable color outputs in the terminal, which don't look good in OI and aren't useful
-        # code = """
-        # from IPython.core.getipython import get_ipython
-        # get_ipython().colors = 'NoColor'
-        # """
-        # self.run(code)
+    # DISABLED because it doesn't work??
+    # Disable color outputs in the terminal, which don't look good in OI and aren't useful
+    # code = """
+    # from IPython.core.getipython import get_ipython
+    # get_ipython().colors = 'NoColor'
+    # """
+    # self.run(code)
 
     def terminate(self):
         """
@@ -129,10 +144,10 @@ class PythonJupyterEnv(BaseEnv):
 
         Yields:
             dict: Output messages generated during execution.
-        """        
+        """
         # 解析python代码并且将函数体抽取出来存成字典，key是函数名，value是函数体，如果要存的话，就将每个函数存成一个py文件
         # try:
-        #     functions = string_to_python(code)  # 
+        #     functions = string_to_python(code)  #
         # except:
         #     # Non blocking
         #     functions = {}
@@ -171,13 +186,14 @@ class PythonJupyterEnv(BaseEnv):
         Args:
             code (str): The Python code to execute.
             message_queue (queue.Queue): The message queue for storing output messages.
-        """        
+        """
+
         def iopub_message_listener():
-            '''
-            The main function of this function is to monitor the messages on the IOPub message channel of the IPython kernel and 
-            process them accordingly according to the type of the message. The IOPub message channel is a channel in the Jupyter/IPython 
-            system used to broadcast execution results, logs, errors, status updates and other information.            
-            '''
+            """
+            The main function of this function is to monitor the messages on the IOPub message channel of the IPython kernel and
+            process them accordingly according to the type of the message. The IOPub message channel is a channel in the Jupyter/IPython
+            system used to broadcast execution results, logs, errors, status updates and other information.
+            """
             while True:
                 # If self.finish_flag = True, and we didn't set it (we do below), we need to stop. That's our "stop"
                 if self.finish_flag is True:
@@ -282,7 +298,7 @@ class PythonJupyterEnv(BaseEnv):
 
         Returns:
             tuple: The modified line and active line number, if detected.
-        """        
+        """
         if "##active_line" in line:
             # Split the line by "##active_line" and grab the last element
             last_active_line = line.split("##active_line")[-1]
@@ -302,7 +318,7 @@ class PythonJupyterEnv(BaseEnv):
 
         Yields:
             dict: Output messages.
-        """        
+        """
         while True:
             if self.listener_thread:
                 try:
@@ -316,7 +332,7 @@ class PythonJupyterEnv(BaseEnv):
     def stop(self):
         """
         Stops the execution of code by setting the finish flag.
-        """        
+        """
         self.finish_flag = True
 
     def preprocess_code(self, code):
@@ -346,7 +362,7 @@ class PythonJupyterEnv(BaseEnv):
         code = "\n".join(code_lines)
 
         return code
-    
+
 
 def add_active_line_prints(code):
     """
@@ -513,7 +529,7 @@ def string_to_python(code_as_string):
 
     Returns:
         dict: A dictionary mapping function names to their code.
-    """    
+    """
     parsed_code = ast.parse(code_as_string)
 
     # Initialize containers for different categories
@@ -595,5 +611,6 @@ create_folder_action(working_directory='/Users/hanchengcheng/Documents/official_
     for _ in env.run(code):
         print(_)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

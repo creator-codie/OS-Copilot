@@ -1,22 +1,30 @@
 import os
+
 import dotenv
-
 from fastapi import FastAPI
-from oscopilot.utils.server_config import ConfigManager
-dotenv.load_dotenv(dotenv_path='.env', override=True)
-app = FastAPI()
-
-# Import your services
-from oscopilot.tool_repository.api_tools.bing.bing_service import router as bing_router
-from oscopilot.tool_repository.api_tools.audio2text.audio2text_service import router as audio2text_router
-from oscopilot.tool_repository.api_tools.image_caption.image_caption_service import router as image_caption_router
-from oscopilot.tool_repository.api_tools.wolfram_alpha.wolfram_alpha import router as wolfram_alpha_router
-
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
+from oscopilot.tool_repository.api_tools.audio2text.audio2text_service import (
+    router as audio2text_router,
+)
+from oscopilot.tool_repository.api_tools.bing.bing_service import router as bing_router
+from oscopilot.tool_repository.api_tools.image_caption.image_caption_service import (
+    router as image_caption_router,
+)
+from oscopilot.tool_repository.api_tools.wolfram_alpha.wolfram_alpha import (
+    router as wolfram_alpha_router,
+)
+from oscopilot.utils.server_config import ConfigManager
+
+dotenv.load_dotenv(dotenv_path=".env", override=True)
+app = FastAPI()
+
+# Import your services
+
 
 class LoggingMiddleware(BaseHTTPMiddleware):
+
     async def dispatch(self, request: Request, call_next):
         print(f"Incoming request: {request.method} {request.url}")
         try:
@@ -33,10 +41,10 @@ app.add_middleware(LoggingMiddleware)
 
 # Create a dictionary that maps service names to their routers
 services = {
-    "bing": bing_router, # bing_search, image_search and web_loader
+    "bing": bing_router,  # bing_search, image_search and web_loader
     "autio2text": audio2text_router,
     "image_caption": image_caption_router,
-    "wolfram_alpha": wolfram_alpha_router
+    "wolfram_alpha": wolfram_alpha_router,
 }
 
 server_list = ["bing", "autio2text", "image_caption"]

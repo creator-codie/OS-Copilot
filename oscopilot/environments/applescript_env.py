@@ -1,4 +1,5 @@
 import os
+
 from oscopilot.environments import SubprocessEnv
 
 
@@ -7,7 +8,8 @@ class AppleScript(SubprocessEnv):
     A class representing an AppleScript environment for executing AppleScript code.
 
     This class inherits from SubprocessEnv, which provides a general environment for executing code in subprocesses.
-    """    
+    """
+
     file_extension = "applescript"
     name = "AppleScript"
 
@@ -16,7 +18,7 @@ class AppleScript(SubprocessEnv):
         Initializes the AppleScript environment.
 
         Sets up the start command for executing AppleScript code.
-        """        
+        """
         super().__init__()
         self.start_cmd = [os.environ.get("SHELL", "/bin/zsh")]
 

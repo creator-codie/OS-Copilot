@@ -1,19 +1,29 @@
 import json
-import requests
-from oscopilot import FridayAgent
-from oscopilot import FridayExecutor, FridayPlanner, FridayRetriever, ToolManager
-from oscopilot.utils import setup_config, GAIALoader, GAIA_postprocess
 
+import requests
+
+from oscopilot import (
+    FridayAgent,
+    FridayExecutor,
+    FridayPlanner,
+    FridayRetriever,
+    ToolManager,
+)
+from oscopilot.utils import GAIA_postprocess, GAIALoader, setup_config
 
 args = setup_config()
-args.dataset_type = 'validation'
-model = 'gpt4-turbo'
+args.dataset_type = "validation"
+model = "gpt4-turbo"
 
-write_file_path = 'gaia_{}_{}_level{}_results.jsonl'.format(model, args.dataset_type, args.level)
+write_file_path = "gaia_{}_{}_level{}_results.jsonl".format(
+    model, args.dataset_type, args.level
+)
+
+
 def get_numbers(path):
     correct = 0
     incomplete = 0
-    with open(path, 'r', encoding='utf-8') as file:
+    with open(path, "r", encoding="utf-8") as file:
         data = [json.loads(line) for line in file]
         print(data)
         for d in data:
@@ -23,9 +33,12 @@ def get_numbers(path):
                 incomplete += 1
         if len(data) > 0:
             return correct, incomplete, data[-1]["index"]
-        return correct, incomplete, -1 # -1 denotes no previous running
+        return correct, incomplete, -1  # -1 denotes no previous running
 
-agent = FridayAgent(FridayPlanner, FridayRetriever, FridayExecutor, ToolManager, config=args)
+
+agent = FridayAgent(
+    FridayPlanner, FridayRetriever, FridayExecutor, ToolManager, config=args
+)
 
 gaia = GAIALoader(args.level, args.dataset_cache)
 
@@ -40,13 +53,13 @@ if args.gaia_task_id:
         result = """17000
         """
         # result = GAIA_postprocess(task['Question'], agent.inner_monologue.result)
-        result = GAIA_postprocess(task['Question'], result)
-        print('The answer of GAIA Task {0} : {1}'.format(args.gaia_task_id, result))
+        result = GAIA_postprocess(task["Question"], result)
+        print("The answer of GAIA Task {0} : {1}".format(args.gaia_task_id, result))
 else:
     task_lst = gaia.dataset[args.dataset_type]
     correct, incomplete, last_run_index = get_numbers(write_file_path)
     print(correct, incomplete, last_run_index)
-    with open(write_file_path, 'a', encoding='utf-8') as file:
+    with open(write_file_path, "a", encoding="utf-8") as file:
         count = 0
 
         for task in task_lst:
@@ -55,13 +68,15 @@ else:
                 count += 1
                 continue
             query = gaia.task2query(task)
-            result = ''
+            result = ""
             # agent.run(query)
             try:
                 agent.run(query)
                 print("$$$$$$" * 30)
-                if agent.inner_monologue.result != '':
-                    result = GAIA_postprocess(task['Question'], agent.inner_monologue.result)
+                if agent.inner_monologue.result != "":
+                    result = GAIA_postprocess(
+                        task["Question"], agent.inner_monologue.result
+                    )
             except requests.exceptions.ConnectionError as ConnectionError:
                 print(f"Connection error.: {ConnectionError}")
                 exit()
@@ -74,15 +89,15 @@ else:
                 incomplete += 1
             output_dict = {
                 "index": count,
-                "task_id": task['task_id'],
+                "task_id": task["task_id"],
                 "model_answer": result,
                 "groundtruth": task["Final answer"],
-                "reasoning_trace": ""
+                "reasoning_trace": "",
             }
             if result == task["Final answer"]:
                 correct += 1
             json_str = json.dumps(output_dict)
-            file.write(json_str + '\n')
+            file.write(json_str + "\n")
             file.flush()
             count += 1
             # if count > 2:

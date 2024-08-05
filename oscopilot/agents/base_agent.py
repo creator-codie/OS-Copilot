@@ -1,5 +1,6 @@
-import re
 import json
+import re
+
 from oscopilot.utils import get_os_version
 
 
@@ -18,13 +19,14 @@ class BaseAgent:
         action_lib: A library of actions available to the agents, initialized as None.
         max_iter: The maximum number of iterations the agents can perform, initialized as None.
     """
+
     def __init__(self):
         """
         Initializes a new instance of BaseAgent with default values for its attributes.
         """
         self.system_version = get_os_version()
-        
-    def extract_information(self, message, begin_str='[BEGIN]', end_str='[END]'):
+
+    def extract_information(self, message, begin_str="[BEGIN]", end_str="[END]"):
         """
         Extracts substrings from a message that are enclosed within specified begin and end markers.
 
@@ -40,11 +42,11 @@ class BaseAgent:
         _begin = message.find(begin_str)
         _end = message.find(end_str)
         while not (_begin == -1 or _end == -1):
-            result.append(message[_begin + len(begin_str):_end])
-            message = message[_end + len(end_str):]
+            result.append(message[_begin + len(begin_str) : _end])
+            message = message[_end + len(end_str) :]
             _begin = message.find(begin_str)
             _end = message.find(end_str)
-        return result  
+        return result
 
     def extract_json_from_string(self, text):
         """
@@ -62,15 +64,15 @@ class BaseAgent:
             str: An error message indicating a parsing error or that no JSON data was found.
         """
         # Improved regular expression to find JSON data within a string
-        json_regex = r'```json\s*\n\{[\s\S]*?\n\}\s*```'
-        
+        json_regex = r"```json\s*\n\{[\s\S]*?\n\}\s*```"
+
         # Search for JSON data in the text
         matches = re.findall(json_regex, text)
 
         # Extract and parse the JSON data if found
         if matches:
             # Removing the ```json and ``` from the match to parse it as JSON
-            json_data = matches[0].replace('```json', '').replace('```', '').strip()
+            json_data = matches[0].replace("```json", "").replace("```", "").strip()
             try:
                 # Parse the JSON data
                 parsed_json = json.loads(json_data)
