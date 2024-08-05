@@ -45,15 +45,11 @@ class BaseEnv:
         return {"type": "console", "format": "output", "content": code}
 
     def stop(self):
-        """
-        Halts code execution, but does not terminate state.
-        """
+        """Halts code execution, but does not terminate state."""
         pass
 
     def terminate(self):
-        """
-        Terminates state.
-        """
+        """Terminates state."""
         pass
 
     def list_working_dir(self):
