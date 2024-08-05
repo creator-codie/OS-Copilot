@@ -405,7 +405,7 @@ class GAIALoader:
 
 class SheetTaskLoader:
     def __init__(self, sheet_task_path=None):
-        if sheet_task_path != None:
+        if sheet_task_path is not None:
             if not os.path.exists(sheet_task_path):
                 raise AssertionError(f"Sheet task jsonl file {sheet_task_path} does not exist.")
             self.sheet_task_path = sheet_task_path
