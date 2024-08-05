@@ -61,7 +61,7 @@ class PageItemV2(BaseModel):
 @router.get("/tools/bing/image_search", summary="Searches for images related to the provided keywords using the Bing Image Search API. It allows specifying the number of images to return (top_k) and retries the search up to a specified number of times (max_retry) in case of failures. The search is performed with a moderate safe search filter and is intended for use within an environments that requires image search capabilities. The function returns a list of images, including their names, URLs, and thumbnail information. If the search fails after the maximum number of retries, it raises a runtime error.")
 async def image_search(item: QueryItemV2):
     try:
-        if item.top_k == None:
+        if item.top_k is None:
             item.top_k = 10
         search_results = image_search_api.search_image(item.query,item.top_k)
     except RuntimeError as e:
@@ -71,7 +71,7 @@ async def image_search(item: QueryItemV2):
 @router.get("/tools/bing/searchv2", summary="Execute Bing Search - returns top web snippets related to the query. Avoid using complex filters like 'site:'. For detailed page content, further use the web browser tool.")
 async def bing_search_v2(item: QueryItemV2):
     try:
-        if item.top_k == None:
+        if item.top_k is None:
             item.top_k = 5
         search_results = bing_api_v2.search(item.query,item.top_k)
     except RuntimeError as e:
@@ -87,7 +87,7 @@ async def load_page_v2(item: PageItemV2):
         if(page_token_num <= 4096):
             result = {"page_content": raw_page_content}
         else:
-            if item.query == None:
+            if item.query is None:
                 summarized_page_content = bing_api_v2.summarize_loaded_page(raw_page_content)
                 result = {"page_content": summarized_page_content}
             else:

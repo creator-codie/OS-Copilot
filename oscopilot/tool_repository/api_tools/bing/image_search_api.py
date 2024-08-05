@@ -28,7 +28,7 @@ class ImageSearchAPI:
             if result.status_code == 200:
                 result = result.json()
                 image_List = []
-                if result != None:
+                if result is not None:
                     image_List = [
                         {
                             "imageName": item["name"],

@@ -297,7 +297,7 @@ class FridayAgent(BaseAgent):
             state = self.executor.execute_tool(code, invoke, tool_node.node_type)
             result = state.result
             logging.info(state) 
-            if state.error == None:
+            if state.error is None:
             # Set up the generation format error handling mechanism
                 try:
                     critique, status, score = self.executor.judge_tool(code, description, state, next_action)

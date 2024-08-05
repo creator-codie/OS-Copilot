@@ -180,7 +180,7 @@ class PythonJupyterEnv(BaseEnv):
             '''
             while True:
                 # If self.finish_flag = True, and we didn't set it (we do below), we need to stop. That's our "stop"
-                if self.finish_flag == True:
+                if self.finish_flag is True:
                     self.km.interrupt_kernel()
                     return
                 try:

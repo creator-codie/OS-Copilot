@@ -62,7 +62,7 @@ class BingAPIV2:
                 result = self.search_engine.results(key_words,top_k)
             except Exception:
                 continue
-            if result != None:
+            if result is not None:
                 return result
             else:
                 continue
@@ -80,7 +80,7 @@ class BingAPIV2:
         """
         page_data = self.web_loader.load_data(url)
         page_content_str = ""
-        if(page_data["data"][0] != None and page_data["data"][0]["content"] != None):
+        if(page_data["data"][0] is not None and page_data["data"][0]["content"] is not None):
             page_content_str = page_data["data"][0]["content"]
         return page_content_str
     def summarize_loaded_page(self,page_str):
