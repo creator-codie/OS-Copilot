@@ -26,8 +26,6 @@ class ConfigManager:
             cls._instance = super(ConfigManager, cls).__new__(cls)
             cls._instance.http_proxy = "http://127.0.0.1:10809"
             cls._instance.https_proxy = "http://127.0.0.1:10809"
-            # cls._instance.http_proxy = None
-            # cls._instance.https_proxy = None
         return cls._instance
 
     def set_proxies(self, http, https):

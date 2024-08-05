@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel,Field
 from typing import Optional
-# from .bing_api import BingAPI
 from .bing_api_v2 import BingAPIV2
 from .image_search_api import ImageSearchAPI
 import tiktoken
@@ -23,15 +22,10 @@ def num_tokens_from_string(string: str) -> int:
 
 router = APIRouter()
 
-# bing_api = BingAPI(BING_API) 
 bing_api_v2 = BingAPIV2()
 image_search_api = ImageSearchAPI(BING_API) 
 
-# class QueryItem(BaseModel):
-#     query: str
 
-# class PageItem(BaseModel):
-#     url: str
 
 class QueryItemV2(BaseModel):
     query: str
@@ -40,23 +34,7 @@ class PageItemV2(BaseModel):
     url: str
     query: Optional[str] = Field(None)
 
-# @router.get("/tools/bing/search")
-# async def bing_search(item: QueryItem):
-#     try:
-#         search_results = bing_api.search(item.query)
-#     except RuntimeError as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-#     return search_results
 
-# @router.get("/tools/bing/load_page")
-# async def load_page(item: PageItem):
-#     try:
-#         page_loaded, page_detail = bing_api.load_page(item.url)
-#     except RuntimeError as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-#     if not page_loaded:
-#         raise HTTPException(status_code=500, detail=page_detail)
-#     return {"page_content": page_detail}
 
 @router.get("/tools/bing/image_search", summary="Searches for images related to the provided keywords using the Bing Image Search API. It allows specifying the number of images to return (top_k) and retries the search up to a specified number of times (max_retry) in case of failures. The search is performed with a moderate safe search filter and is intended for use within an environments that requires image search capabilities. The function returns a list of images, including their names, URLs, and thumbnail information. If the search fails after the maximum number of retries, it raises a runtime error.")
 async def image_search(item: QueryItemV2):

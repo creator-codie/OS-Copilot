@@ -1,4 +1,3 @@
-# This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
 
 from oscopilot.environments import BaseEnv
 from oscopilot.environments import AppleScript
@@ -77,32 +76,10 @@ class Env(BaseEnv):
                 state.result += content
         if lang.name == 'Python':
             lang.terminate()
-        # for output_line_dic in lang.step(code):
-        #     if output_line_dic['format'] == 'active_line':
-        #         continue
-        #     content = output_line_dic['content']
-        #     if content != '' and content != '\n':
-        #         if 'Traceback' in content:
-        #             state.error = (state.error or '') + content
-        #         else:
-        #             state.result += content
         state.pwd = self.working_dir
         state.ls = subprocess.run(['ls'], cwd=self.working_dir, capture_output=True, text=True).stdout
         return state
         
-        # if (
-        #     language == "python"
-        #     and self.computer.import_computer_api
-        #     and "computer" in code
-        # ):
-        #     if not self.computer._has_imported_computer_api:
-        #         self.computer._has_imported_computer_api = True
-        #         # Give it access to the computer via Python
-        #         self.computer.run(
-        #             language="python",
-        #             code="import time\nfrom interpreter import interpreter\ncomputer = interpreter.computer",  # We ask it to use time, so
-        #             display=self.computer.verbose,
-        #         )
 
         if stream is False:
             # If stream == False, *pull* from _streaming_run.

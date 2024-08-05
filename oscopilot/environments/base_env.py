@@ -154,4 +154,3 @@ class BaseEnv:
 if __name__ == '__main__':
     env = BaseEnv()
     env.env_state = EnvState()
-    # result = env.observe()

@@ -2,8 +2,6 @@ import re
 import json
 import os
 from oscopilot.utils.llms import OpenAI, OLLAMA
-# from oscopilot.environments.py_env import PythonEnv
-# from oscopilot.environments.py_jupyter_env import PythonJupyterEnv
 from oscopilot.environments import Env
 from oscopilot.utils import get_os_version
 from dotenv import load_dotenv
@@ -20,8 +18,6 @@ class BaseModule:
             self.llm = OpenAI()
         elif MODEL_TYPE == "OLLAMA":
             self.llm = OLLAMA()
-        # self.environment = PythonEnv()
-        # self.environment = PythonJupyterEnv()
         self.environment = Env()
         self.system_version = get_os_version()
         
