@@ -1,6 +1,3 @@
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 from langchain.vectorstores import Chroma
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -204,8 +201,6 @@ class ToolManager:
         with open(f"{self.generated_tool_repo_dir}/generated_tools.json", "w") as fc:
             json.dump(self.generated_tools,fc,indent=4)
         self.vectordb.persist()
-        # with open(f"{self.generated_tool_repo_dir}/generated_tools.json") as f2:
-        #     self.generated_tools = json.load(f2)
 
 
     def exist_tool(self, tool):
@@ -332,14 +327,12 @@ class ToolManager:
             print(
             f"\033[33m delete {tool} info from JSON successfully! \033[0m"
             )            
-        # del code
         code_path = f"{self.generated_tool_repo_dir}/tool_code/{tool}.py"
         if os.path.exists(code_path):
             os.remove(code_path)
             print(
             f"\033[33m delete {tool} code successfully! \033[0m"
             )
-        # del description
         description_path = f"{self.generated_tool_repo_dir}/tool_description/{tool}.txt"
         if os.path.exists(description_path):
             os.remove(description_path)
@@ -396,8 +389,6 @@ def add_tool(toolManager, tool_name, tool_path):
     match = re.search(pattern, code)
     if match:
         description = match.group(1)
-        # print(description)
-        # print(type(description))
         info = {
             "task_name" : tool_name,
             "code" : code,
@@ -514,21 +505,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-    # Retrieval
-    # res = toolManager.retrieve_tool_name("Open the specified text file in the specified folder using the default text viewer on Ubuntu.")
-    # print(res[0])
 
-    # Delete
-    # toolManager = ToolManager(generated_tool_repo_dir='oscopilot/tool_repository/generated_tools')
-    # toolManager.delete_tool("implement_loop_progress")
 
-    # Add
-    # code = ''
-    # with open("temp.py", 'r') as file:
-    #     code = file.read()
-    # info = {
-    #     "task_name" : "XXX",
-    #     "code" : code,
-    #     "description" : "XXX"
-    # }
-    # toolManager.add_new_tool(info)

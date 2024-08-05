@@ -29,17 +29,12 @@ agent = FridayAgent(FridayPlanner, FridayRetriever, FridayExecutor, ToolManager,
 
 gaia = GAIALoader(args.level, args.dataset_cache)
 
-# args.gaia_task_id = "e1fc63a2-da7a-432f-be78-7c4a95598703"
 if args.gaia_task_id:
     task = gaia.get_data_by_task_id(args.gaia_task_id, args.dataset_type)
     query = gaia.task2query(task)
-    # agent.run(query)
-    # if agent.inner_monologue.result != '':
     if True:
-        # print(agent.inner_monologue.result)
         result = """17000
         """
-        # result = GAIA_postprocess(task['Question'], agent.inner_monologue.result)
         result = GAIA_postprocess(task['Question'], result)
         print('The answer of GAIA Task {0} : {1}'.format(args.gaia_task_id, result))
 else:
@@ -85,8 +80,6 @@ else:
             file.write(json_str + '\n')
             file.flush()
             count += 1
-            # if count > 2:
-            #     break
         print("accuracy:", correct / count)
         print("incomplete:", incomplete / count)
         print("correct incomplete total,", correct, incomplete, count)

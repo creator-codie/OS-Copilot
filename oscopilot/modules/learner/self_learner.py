@@ -52,7 +52,6 @@ class SelfLearner(BaseModule):
             prior_course = prior_course
         )
         response = send_chat_prompts(sys_prompt, user_prompt, self.llm)
-        # logging.info(f"The overall response is: {response}")
         course = self.extract_json_from_string(response)
         self.course = course
         return self.course

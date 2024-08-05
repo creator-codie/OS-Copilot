@@ -1,4 +1,3 @@
-# This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
 
 import ast
 import os
@@ -54,7 +53,6 @@ class PythonJupyterEnv(BaseEnv):
         # Ensure only one KernelManager instance is configured and started
         self.km = KernelManager(kernel_name='python3', kernel_cmd=[python_executable, '-m', 'ipykernel_launcher', '-f', '{connection_file}'])
         self.km.start_kernel(env=os.environ.copy())
-        # self.km.start_kernel()
         self.kc = self.km.client()
         self.kc.start_channels()
         while not self.kc.is_alive():
@@ -96,7 +94,6 @@ class PythonJupyterEnv(BaseEnv):
 
 #         # Use Agg, which bubbles everything up as an image.
 #         # Not perfect (I want interactive!) but it works.
-#         backend = "Agg"
 
 #         code = f"""
 # import matplotlib
@@ -137,15 +134,8 @@ class PythonJupyterEnv(BaseEnv):
         #     # Non blocking
         #     functions = {}
 
-        # if self.computer.save_skills and functions:
-        #     skill_library_path = self.computer.skills.path
 
-        #     if not os.path.exists(skill_library_path):
-        #         os.makedirs(skill_library_path)
 
-        #     for filename, function_code in functions.items():
-        #         with open(f"{skill_library_path}/{filename}.py", "w") as file:
-        #             file.write(function_code)
 
         self.finish_flag = False
         try:
@@ -268,7 +258,6 @@ class PythonJupyterEnv(BaseEnv):
                         )
 
         self.listener_thread = threading.Thread(target=iopub_message_listener)
-        # self.listener_thread.daemon = True
         self.listener_thread.start()
 
         self.kc.execute(code)
