@@ -73,7 +73,7 @@ def parse_partial_json(s):
                 stack.append("}")
             elif char == "[":
                 stack.append("]")
-            elif char == "}" or char == "]":
+            elif char in ("}", "]"):
                 if stack and stack[-1] == char:
                     stack.pop()
                 else:
