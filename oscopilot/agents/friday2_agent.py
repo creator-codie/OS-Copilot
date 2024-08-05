@@ -358,7 +358,7 @@ class FridayAgent(BaseAgent):
                 # The task execution is completed and the loop exits
                 if status == "Complete":
                     break
-                elif status == "Amend":
+                if status == "Amend":
                     pass
                 elif status == "Replan":
                     break
