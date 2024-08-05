@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile,Depends
-from pydantic import BaseModel,Field
+from pydantic import BaseModel
 from typing import Optional
 from .audio2text import Audio2TextTool
-import io
 import os
 import shutil
 router = APIRouter()

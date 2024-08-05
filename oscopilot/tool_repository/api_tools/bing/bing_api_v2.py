@@ -1,8 +1,5 @@
-import requests
 from langchain.utilities import BingSearchAPIWrapper
-from bs4 import BeautifulSoup
 from typing import Tuple
-from enum import Enum
 from .web_loader import WebPageLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings.openai import OpenAIEmbeddings

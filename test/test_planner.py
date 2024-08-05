@@ -1,6 +1,6 @@
 import pytest
 from oscopilot.utils import setup_config
-from oscopilot import FridayPlanner, ToolManager
+from oscopilot import FridayPlanner
 from oscopilot.prompts.friday_pt import prompt
 
 class TestPlanner:

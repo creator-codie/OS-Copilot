@@ -1,10 +1,7 @@
 from oscopilot.tool_repository.manager.action_node import ActionNode
-from collections import defaultdict, deque
 from oscopilot.modules.base_module import BaseModule
-from oscopilot.tool_repository.manager.tool_manager import get_open_api_description_pair
 from oscopilot.utils.utils import send_chat_prompts
 import json
-import sys
 import logging
 
 

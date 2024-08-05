@@ -1,7 +1,4 @@
-import openai
 import logging
-import os
-import time
 import requests
 import json
 

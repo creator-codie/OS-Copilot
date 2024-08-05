@@ -2,7 +2,6 @@ from oscopilot.agents.base_agent import BaseAgent
 from oscopilot.utils import check_os_version
 import json
 import logging
-import sys
 from oscopilot.prompts.friday_pt import prompt
 from oscopilot.utils import TaskStatusCode, InnerMonologue, ExecutionState, JudgementResult, RepairingResult
 

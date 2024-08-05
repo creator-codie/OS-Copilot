@@ -1,7 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
 from typing import Tuple
-from enum import Enum
 
 SEARCH_RESULT_LIST_CHUNK_SIZE = 3
 RESULT_TARGET_PAGE_PER_TEXT_COUNT = 500

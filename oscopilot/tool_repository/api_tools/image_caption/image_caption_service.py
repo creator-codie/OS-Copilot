@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException,UploadFile,File,Form, Depends
-from pydantic import BaseModel,Field
 from typing import Optional
 from .gpt4v_caption import ImageCaptionTool
 import base64

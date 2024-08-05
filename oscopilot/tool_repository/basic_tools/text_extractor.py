@@ -1,4 +1,3 @@
-from oscopilot.utils.utils import send_chat_prompts
 from oscopilot.prompts.friday_pt import prompt
 
 

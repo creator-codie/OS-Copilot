@@ -2,12 +2,7 @@
 
 import os
 import platform
-import queue
 import re
-import subprocess
-import threading
-import time
-import traceback
 from oscopilot.environments import SubprocessEnv
 
 

@@ -2,7 +2,6 @@ from oscopilot.modules.base_module import BaseModule
 from oscopilot.tool_repository.manager.tool_manager import get_open_api_doc_path
 import re
 import json
-import subprocess
 from pathlib import Path
 from oscopilot.utils.utils import send_chat_prompts, api_exception_mechanism
 
