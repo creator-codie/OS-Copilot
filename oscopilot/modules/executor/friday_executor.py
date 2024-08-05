@@ -576,11 +576,7 @@ class FridayExecutor(BaseModule):
         to the schemas needed to understand the API's usage.
         """
         # init current api's doc
-        curr_api_doc = {}
-        curr_api_doc["openapi"] = self.open_api_doc["openapi"]
-        curr_api_doc["info"] = self.open_api_doc["info"]
-        curr_api_doc["paths"] = {}
-        curr_api_doc["components"] = {"schemas": {}}
+        curr_api_doc = {"openapi": self.open_api_doc["openapi"], "info": self.open_api_doc["info"], "paths": {}, "components": {"schemas": {}}}
         api_path_doc = {}
         # extract path and schema
         if tool_api_path not in self.open_api_doc["paths"]:
