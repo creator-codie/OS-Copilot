@@ -21,9 +21,7 @@ class BasicPlanner(BaseModule):
         self.sub_task_list = []
 
     def reset_plan(self):
-        """
-        Resets global messages and subtask list to their initial states.
-        """
+        """Resets global messages and subtask list to their initial states."""
         self.subtask_num = 0
         self.global_messages = []
         self.sub_task_list = []

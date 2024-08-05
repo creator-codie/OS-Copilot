@@ -22,9 +22,7 @@ class LLAMA3:
     """
 
     def __init__(self):
-        """
-        Initializes the OpenAI object with the given configuration.
-        """
+        """Initializes the OpenAI object with the given configuration."""
 
         self.model_name = "llama3"
 

@@ -295,15 +295,13 @@ class PythonJupyterEnv(BaseEnv):
         return line, None
 
     def _capture_output(self, message_queue):
-        """
-        Captures output messages from the message queue.
+        """Captures output messages from the message queue.
 
         Args:
             message_queue (queue.Queue): The message queue.
 
         Yields:
-            dict: Output messages.
-        """
+            dict: Output messages."""
         while True:
             if self.listener_thread:
                 try:
