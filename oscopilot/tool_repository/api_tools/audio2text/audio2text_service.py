@@ -1,9 +1,12 @@
-from fastapi import APIRouter, HTTPException, File, UploadFile,Depends
-from pydantic import BaseModel
-from typing import Optional
-from .audio2text import Audio2TextTool
 import os
 import shutil
+from typing import Optional
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from pydantic import BaseModel
+
+from .audio2text import Audio2TextTool
+
 router = APIRouter()
 
 whisper_api = Audio2TextTool()
@@ -13,8 +16,9 @@ class AudioTextQueryItem(BaseModel):
     file: UploadFile = File(...)
 
 
-
-@router.post("/tools/audio2text", summary="A tool that converts audio to natural language text.")
+@router.post(
+    "/tools/audio2text", summary="A tool that converts audio to natural language text."
+)
 async def audio2text(item: AudioTextQueryItem = Depends()):
     try:
         # Create a temporary file to save the uploaded audio.
@@ -27,4 +31,3 @@ async def audio2text(item: AudioTextQueryItem = Depends()):
         return {"text": caption}
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
-

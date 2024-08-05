@@ -2,11 +2,12 @@ from oscopilot.prompts.friday_pt import prompt
 
 
 class TextExtractor:
+
     def __init__(self, agent):
         super().__init__()
         self.agent = agent
-        self.prompt = prompt['text_extract_prompt']
-    
+        self.prompt = prompt["text_extract_prompt"]
+
     def extract_file_content(self, file_path):
         """
         Extract the content of the file.

@@ -3,6 +3,7 @@
 import os
 import platform
 import re
+
 from oscopilot.environments import SubprocessEnv
 
 
@@ -11,7 +12,8 @@ class Shell(SubprocessEnv):
     A class representing a shell environment for executing shell scripts.
 
     This class inherits from SubprocessEnv, which provides a general environment for executing code in subprocesses.
-    """    
+    """
+
     file_extension = "sh"
     name = "Shell"
     aliases = ["bash", "sh", "zsh"]
@@ -23,7 +25,7 @@ class Shell(SubprocessEnv):
         Initializes the Shell environment.
 
         Determines the start command based on the platform.
-        """        
+        """
         super().__init__()
 
         # Determine the start command based on the platform
@@ -41,7 +43,7 @@ class Shell(SubprocessEnv):
 
         Returns:
             str: The preprocessed shell script code.
-        """        
+        """
         return preprocess_shell(code)
 
     def line_postprocessor(self, line):
@@ -53,7 +55,7 @@ class Shell(SubprocessEnv):
 
         Returns:
             str: The processed line.
-        """        
+        """
         return line
 
     def detect_active_line(self, line):
@@ -65,7 +67,7 @@ class Shell(SubprocessEnv):
 
         Returns:
             int: The line number indicated by the active line indicator, or None if not found.
-        """        
+        """
         if "##active_line" in line:
             return int(line.split("##active_line")[1].split("##")[0])
         return None
@@ -79,7 +81,7 @@ class Shell(SubprocessEnv):
 
         Returns:
             bool: True if the end of execution marker is found, False otherwise.
-        """        
+        """
         return "##end_of_execution##" in line
 
 
@@ -133,7 +135,7 @@ def has_multiline_commands(script_text):
 
     Returns:
         bool: True if the script contains multiline commands, False otherwise.
-    """    
+    """
     # Patterns that indicate a line continues
     continuation_patterns = [
         r"\\$",  # Line continuation character at the end of the line
@@ -158,8 +160,8 @@ def has_multiline_commands(script_text):
     return False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     env = Shell()
-    code = 'pip install --upgrade pip'
+    code = "pip install --upgrade pip"
     for _ in env.run(code):
         print(_)

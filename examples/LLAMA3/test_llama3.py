@@ -1,6 +1,7 @@
-import logging
-import requests
 import json
+import logging
+
+import requests
 
 
 class LLAMA3:
@@ -25,7 +26,7 @@ class LLAMA3:
         Initializes the OpenAI object with the given configuration.
         """
 
-        self.model_name = 'llama3'
+        self.model_name = "llama3"
 
         self.llama_serve = "http://localhost:11434/api/chat"
 
@@ -47,19 +48,15 @@ class LLAMA3:
         """
         payload = {
             "model": "llama3",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": "why is the sky blue?"
-                }],
-            "stream": False
-            
+            "messages": [{"role": "user", "content": "why is the sky blue?"}],
+            "stream": False,
         }
 
-        headers = {
-                "Content-Type": "application/json"}
+        headers = {"Content-Type": "application/json"}
 
-        response = requests.post(self.llama_serve, data=json.dumps(payload),headers=headers)
+        response = requests.post(
+            self.llama_serve, data=json.dumps(payload), headers=headers
+        )
 
         if response.status_code == 200:
             # Get the response data
@@ -68,6 +65,7 @@ class LLAMA3:
         else:
             logging.error("Failed to call LLM: ", response.status_code, response.text)
             return ""
+
 
 llm = LLAMA3()
 print(llm.chat(messages=111))
