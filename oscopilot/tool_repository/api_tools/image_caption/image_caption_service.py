@@ -10,10 +10,6 @@ router = APIRouter()
 image_caption_api = ImageCaptionTool()
 
 
-# class CaptionQueryItem(BaseModel):
-#     query: Optional[str] = "What's in this image?"
-#     url: Optional[str] = None
-#     image_file: Optional[UploadFile] = File(None)
 async def caption_parameters(
     query: Optional[str] = Form("What's in this image?"),
     url: Optional[str] = Form(None),
