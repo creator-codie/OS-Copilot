@@ -5,7 +5,9 @@ import subprocess
 import threading
 import time
 import traceback
+
 from oscopilot.environments.base_env import BaseEnv
+
 
 class SubprocessEnv(BaseEnv):
     """
@@ -15,7 +17,7 @@ class SubprocessEnv(BaseEnv):
     starting and terminating processes, handling output streams, and executing code steps.
 
     It inherits from BaseEnv, which provides basic environment functionality.
-    """    
+    """
 
     def __init__(self):
         """
@@ -27,7 +29,7 @@ class SubprocessEnv(BaseEnv):
             verbose (bool): Whether to print verbose output.
             output_queue (queue.Queue): A queue for storing output messages.
             done (threading.Event): An event to signal completion of execution.
-        """        
+        """
         self.start_cmd = []
         self.process = None
         self.verbose = False
@@ -43,7 +45,7 @@ class SubprocessEnv(BaseEnv):
 
         Returns:
             int or None: The active line number if detected, else None.
-        """        
+        """
         return None
 
     def detect_end_of_execution(self, line):
@@ -55,7 +57,7 @@ class SubprocessEnv(BaseEnv):
 
         Returns:
             bool: True if end of execution marker is detected, else False.
-        """        
+        """
         return None
 
     def line_postprocessor(self, line):
@@ -67,7 +69,7 @@ class SubprocessEnv(BaseEnv):
 
         Returns:
             str or None: The processed line or None if line should be discarded.
-        """        
+        """
         return line
 
     def preprocess_code(self, code):
@@ -85,14 +87,14 @@ class SubprocessEnv(BaseEnv):
         return code
 
     def terminate(self):
-        """Terminates the subprocess if it is running."""        
+        """Terminates the subprocess if it is running."""
         if self.process:
             self.process.terminate()
             self.process.stdin.close()
             self.process.stdout.close()
 
     def start_process(self):
-        """Starts the subprocess to execute code."""        
+        """Starts the subprocess to execute code."""
         if self.process:
             self.terminate()
 
@@ -130,7 +132,7 @@ class SubprocessEnv(BaseEnv):
 
         Yields:
             dict: Output messages generated during execution.
-        """        
+        """
         retry_count = 0
         max_retries = 3
 
@@ -204,7 +206,7 @@ class SubprocessEnv(BaseEnv):
         Args:
             stream: The output stream to handle.
             is_error_stream (bool): Indicates if the stream is the error stream.
-        """        
+        """
         try:
             for line in iter(stream.readline, ""):
                 if self.verbose:
@@ -258,5 +260,3 @@ class SubprocessEnv(BaseEnv):
                     print("Stream closed while reading.")
             else:
                 raise e
-
-
