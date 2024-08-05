@@ -83,26 +83,6 @@ class Env(BaseEnv):
         ).stdout
         return state
 
-        if stream is False:
-            # If stream == False, *pull* from _streaming_run.
-            output_messages = []
-            for chunk in self._streaming_run(language, code, display=display):
-                if chunk.get("format") != "active_line":
-                    # Should we append this to the last message, or make a new one?
-                    if (
-                        output_messages != []
-                        and output_messages[-1].get("type") == chunk["type"]
-                        and output_messages[-1].get("format") == chunk["format"]
-                    ):
-                        output_messages[-1]["content"] += chunk["content"]
-                    else:
-                        output_messages.append(chunk)
-            return output_messages
-
-        elif stream is True:
-            # If stream == True, replace this with _streaming_run.
-            return self._streaming_run(language, code, display=display)
-
     def _streaming_run(self, language, code, display=False):
         """
         Executes code in the specified language and streams the output.
