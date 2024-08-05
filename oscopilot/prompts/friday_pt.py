@@ -146,7 +146,7 @@ prompt = {
 
         Note: Please output according to the output format specified in the system message.
         """,
-# Python amend and invoke prompts in os
+        # Python amend and invoke prompts in os
         "_SYSTEM_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT": """
         You are an expert in Python programming, with a focus on diagnosing and resolving code issues.
         Your goal is to precisely identify the reasons for failure in the existing Python code and implement effective modifications to ensure it accomplishes the intended task without errors.
