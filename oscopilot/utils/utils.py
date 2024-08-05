@@ -1,21 +1,22 @@
 import copy
-import numpy as np
 import itertools
 import json
 import logging
 import os
+import platform
+import random
 import re
 import string
+from functools import wraps
 from typing import Any
-import tqdm
-import re
+
+import numpy as np
 import tiktoken
-import random
+import tqdm
 from datasets import load_dataset
+
 from oscopilot.prompts.general_pt import prompt as general_pt
 from oscopilot.utils.llms import OpenAI
-import platform
-from functools import wraps
 
 
 def save_json(file_path, new_json_content):
@@ -31,22 +32,22 @@ def save_json(file_path, new_json_content):
     """
 
     # Check if the file exists
-    if os.path.exists(file_path): 
+    if os.path.exists(file_path):
         # If the file exists, read its content
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             json_content = json.load(f)
 
         # Check the type of existing JSON content
         if isinstance(json_content, list):
             # If the existing content is a list, append or extend the new content
             if isinstance(new_json_content, list):
-                json_content.extend(new_json_content)    
+                json_content.extend(new_json_content)
             else:
-                json_content.append(new_json_content)   
-        elif isinstance(json_content, dict):  
+                json_content.append(new_json_content)
+        elif isinstance(json_content, dict):
             # If the existing content is a dictionary, update it with the new content
             if isinstance(new_json_content, dict):
-                json_content.update(new_json_content)                
+                json_content.update(new_json_content)
             else:
                 # If the new content is not a dictionary, return without saving
                 return
@@ -55,11 +56,11 @@ def save_json(file_path, new_json_content):
             return
 
         # Write the updated JSON content back to the file
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(json_content, f, indent=4)
     else:
         # If the file does not exist, create a new file and write the new content to it
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(new_json_content, f, indent=4)
 
 
@@ -71,10 +72,10 @@ def read_json(file_path):
         file_path (str): The path to the JSON file to be read.
 
     Returns:
-        dict or list: The JSON content read from the file. If the file contains a JSON object, it returns a dictionary. 
+        dict or list: The JSON content read from the file. If the file contains a JSON object, it returns a dictionary.
                       If the file contains a JSON array, it returns a list.
-    """    
-    with open(file_path, 'r') as f:
+    """
+    with open(file_path, "r") as f:
         json_content = json.load(f)
     return json_content
 
@@ -90,7 +91,7 @@ def random_string(length):
         str: A string of random characters and digits of the specified length.
     """
     characters = string.ascii_letters + string.digits
-    random_string = ''.join(random.choice(characters) for _ in range(length))
+    random_string = "".join(random.choice(characters) for _ in range(length))
     return random_string
 
 
@@ -104,7 +105,7 @@ def num_tokens_from_string(string: str) -> int:
     Returns:
         int: The number of tokens the string is encoded into according to the model's tokenizer.
     """
-    encoding = tiktoken.encoding_for_model('gpt-4-1106-preview')
+    encoding = tiktoken.encoding_for_model("gpt-4-1106-preview")
     num_tokens = len(encoding.encode(string))
     return num_tokens
 
@@ -126,7 +127,9 @@ def parse_content(content, html_type="html.parser"):
     """
     implemented = ["html.parser", "lxml", "lxml-xml", "xml", "html5lib"]
     if html_type not in implemented:
-        raise ValueError(f"Parser type {html_type} not implemented. Please choose one of {implemented}")
+        raise ValueError(
+            f"Parser type {html_type} not implemented. Please choose one of {implemented}"
+        )
 
     from bs4 import BeautifulSoup
 
@@ -313,8 +316,8 @@ def cosine_similarity(a, b):
     Returns:
         float: The cosine similarity between vectors `a` and `b`.
     """
-    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\
-    
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
 
 def send_chat_prompts(sys_prompt, user_prompt, llm, prefix=""):
     """
@@ -331,9 +334,9 @@ def send_chat_prompts(sys_prompt, user_prompt, llm, prefix=""):
     The function is a utility for simplifying the process of sending structured chat prompts to a language learning model and parsing its response, useful in scenarios where dynamic interaction with the model is required.
     """
     message = [
-            {"role": "system", "content": sys_prompt},
-            {"role": "user", "content": user_prompt},
-        ]
+        {"role": "system", "content": sys_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
     return llm.chat(message, prefix=prefix)
 
 
@@ -358,32 +361,37 @@ def get_project_root_path():
     # Get the project root directory
     project_root_path = os.path.dirname(oscopilot_directory)
 
-    return project_root_path + '/'
+    return project_root_path + "/"
 
 
 def GAIA_postprocess(question, response):
     llm = OpenAI()
-    extractor_prompt = general_pt['GAIA_ANSWER_EXTRACTOR_PROMPT'].format(
-        question=question,
-        response=response
+    extractor_prompt = general_pt["GAIA_ANSWER_EXTRACTOR_PROMPT"].format(
+        question=question, response=response
     )
-    result = send_chat_prompts('', extractor_prompt, llm)
+    result = send_chat_prompts("", extractor_prompt, llm)
     return result
 
 
 class GAIALoader:
+
     def __init__(self, level=1, cache_dir=None):
         if cache_dir is not None:
             if not os.path.exists(cache_dir):
                 raise AssertionError(f"Cache directory {cache_dir} does not exist.")
             self.cache_dir = cache_dir
             try:
-                self.dataset = load_dataset("gaia-benchmark/GAIA", "2023_level{}".format(level), cache_dir=self.cache_dir)
+                self.dataset = load_dataset(
+                    "gaia-benchmark/GAIA",
+                    "2023_level{}".format(level),
+                    cache_dir=self.cache_dir,
+                )
             except Exception as e:
                 raise Exception(f"Failed to load GAIA dataset: {e}")
         else:
-            self.dataset = load_dataset("gaia-benchmark/GAIA", "2023_level{}".format(level))
-
+            self.dataset = load_dataset(
+                "gaia-benchmark/GAIA", "2023_level{}".format(level)
+            )
 
     def get_data_by_task_id(self, task_id, dataset_type):
         if self.dataset is None or dataset_type not in self.dataset:
@@ -391,23 +399,32 @@ class GAIALoader:
 
         data_set = self.dataset[dataset_type]
         for record in data_set:
-            if record['task_id'] == task_id:
+            if record["task_id"] == task_id:
                 return record
         return None
 
     def task2query(self, task):
-        query = 'Your task is: {}'.format(task['Question'])
-        if task['file_name'] != '':
-            query = query + '\n{0} is the absolute file path you need to use, and the file type is {1}. Note that there is no file extension at the end.'.format(task['file_path'], task['file_name'].split('.')[-1])
-        print('GAIA Task {0}:\n{1}'.format(task['task_id'], query))
+        query = "Your task is: {}".format(task["Question"])
+        if task["file_name"] != "":
+            query = (
+                query
+                + "\n{0} is the absolute file path you need to use, and the file type is {1}. Note that there is no file extension at the end.".format(
+                    task["file_path"], task["file_name"].split(".")[-1]
+                )
+            )
+        print("GAIA Task {0}:\n{1}".format(task["task_id"], query))
         logging.info(query)
         return query
 
+
 class SheetTaskLoader:
+
     def __init__(self, sheet_task_path=None):
         if sheet_task_path != None:
             if not os.path.exists(sheet_task_path):
-                raise AssertionError(f"Sheet task jsonl file {sheet_task_path} does not exist.")
+                raise AssertionError(
+                    f"Sheet task jsonl file {sheet_task_path} does not exist."
+                )
             self.sheet_task_path = sheet_task_path
             try:
                 self.dataset = self.load_sheet_task_dataset()
@@ -416,13 +433,16 @@ class SheetTaskLoader:
         else:
             print("Sheet task jsonl file not provided.")
 
-
     def load_sheet_task_dataset(self):
         dataset = []
-        with open(self.sheet_task_path, 'r') as file:
+        with open(self.sheet_task_path, "r") as file:
             for _, line in enumerate(file):
                 task_info = json.loads(line)
-                query = self.task2query(task_info['Context'], task_info['Instructions'], get_project_root_path() + task_info['file_path'])
+                query = self.task2query(
+                    task_info["Context"],
+                    task_info["Instructions"],
+                    get_project_root_path() + task_info["file_path"],
+                )
                 dataset.append(query)
         return dataset
 
@@ -431,7 +451,9 @@ class SheetTaskLoader:
                                Your task is: {instructions}
                                The file path of the excel is: {file_path}. Every subtask's description must include the file path, and all subtasks are completed on the file at that path.
                             """
-        query = SHEET_TASK_PROMPT.format(context=context, instructions=instructions, file_path=file_path)
+        query = SHEET_TASK_PROMPT.format(
+            context=context, instructions=instructions, file_path=file_path
+        )
         return query
 
     def get_data_by_task_id(self, task_id):
@@ -458,7 +480,7 @@ def get_os_version():
 
     if system == "Darwin":
         # macOS
-        return 'macOS ' + platform.mac_ver()[0]
+        return "macOS " + platform.mac_ver()[0]
     elif system == "Linux":
         try:
             with open("/etc/os-release") as f:
@@ -507,6 +529,7 @@ def api_exception_mechanism(max_retries=3):
     Returns:
     function: A wrapper function that incorporates the retry mechanism.
     """
+
     def decorator(func):
         """
         The actual decorator that takes a function and applies the retry logic to it.
@@ -517,6 +540,7 @@ def api_exception_mechanism(max_retries=3):
         Returns:
         function: The wrapped function with retry logic.
         """
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             """
@@ -538,9 +562,15 @@ def api_exception_mechanism(max_retries=3):
                     return func(*args, **kwargs)
                 except Exception as e:
                     attempts += 1
-                    logging.error(f"Error on attempt {attempts} in {func.__name__}: {str(e)}")
+                    logging.error(
+                        f"Error on attempt {attempts} in {func.__name__}: {str(e)}"
+                    )
                     if attempts == max_retries:
-                        logging.error(f"Max retries reached in {func.__name__}, operation failed.")
+                        logging.error(
+                            f"Max retries reached in {func.__name__}, operation failed."
+                        )
                         raise
+
         return wrapper
+
     return decorator

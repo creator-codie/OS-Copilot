@@ -1,11 +1,17 @@
-import os
-import logging
-from oscopilot.prompts.friday_pt import prompt
 import json
-from oscopilot.utils import self_learning_print_logging, get_project_root_path, read_json, save_json
+import logging
+import os
+
+from oscopilot.prompts.friday_pt import prompt
+from oscopilot.utils import (
+    get_project_root_path,
+    read_json,
+    save_json,
+    self_learning_print_logging,
+)
 
 
-class SelfLearning: 
+class SelfLearning:
     """
     A class designed to facilitate self-learning for software-related topics by automatically generating and
     engaging with courses based on provided software and package information.
@@ -32,8 +38,8 @@ class SelfLearning:
         """
         super().__init__()
         self.config = config
-        self.agent = agent   
-        self.learner = learner(prompt['self_learning_prompt'], tool_manager)      
+        self.agent = agent
+        self.learner = learner(prompt["self_learning_prompt"], tool_manager)
         self.course = {}
         if text_extractor:
             self.text_extractor = text_extractor(agent)
@@ -52,10 +58,12 @@ class SelfLearning:
         """
         self_learning_print_logging(self.config)
         # Create or read the course file
-        courses_dir = get_project_root_path() + 'courses'
+        courses_dir = get_project_root_path() + "courses"
         if not os.path.exists(courses_dir):
             os.makedirs(courses_dir)
-        prior_course_path = os.path.join(courses_dir, software_name + '_' + package_name + '.json')
+        prior_course_path = os.path.join(
+            courses_dir, software_name + "_" + package_name + ".json"
+        )
         if os.path.exists(prior_course_path):
             self.course = read_json(prior_course_path)
         else:
@@ -65,7 +73,7 @@ class SelfLearning:
         file_content = None
         if demo_file_path:
             if not os.path.isabs(demo_file_path):
-                demo_file_path = get_project_root_path() + demo_file_path 
+                demo_file_path = get_project_root_path() + demo_file_path
             file_content = self.text_extract(demo_file_path)
         return prior_course_path, file_content
 
@@ -81,15 +89,21 @@ class SelfLearning:
         Returns:
             None.
         """
-        prior_course_path, file_content = self._initialize_learning(software_name, package_name, demo_file_path)
+        prior_course_path, file_content = self._initialize_learning(
+            software_name, package_name, demo_file_path
+        )
         if len(self.course) > 50:
             prior_course = json.dumps(dict(list(self.course.items())[-50:]))
         else:
             prior_course = json.dumps(self.course, indent=4)
-        logging.info(f"The latest lessons that have been completed so far are as follows:\n {prior_course}")
-        new_course = self.learner.design_course(software_name, package_name, demo_file_path, file_content, prior_course)
-        self.learn_course(new_course) 
-        save_json(prior_course_path, new_course)  
+        logging.info(
+            f"The latest lessons that have been completed so far are as follows:\n {prior_course}"
+        )
+        new_course = self.learner.design_course(
+            software_name, package_name, demo_file_path, file_content, prior_course
+        )
+        self.learn_course(new_course)
+        save_json(prior_course_path, new_course)
 
     def continuous_learning(self, software_name, package_name, demo_file_path=None):
         """
@@ -103,19 +117,27 @@ class SelfLearning:
         Returns:
             None: This method does not return anything but updates internal states and possibly external resources.
         """
-        prior_course_path, file_content = self._initialize_learning(software_name, package_name, demo_file_path)
+        prior_course_path, file_content = self._initialize_learning(
+            software_name, package_name, demo_file_path
+        )
 
-        # Continuously design and apply new courses        
+        # Continuously design and apply new courses
         while True:
             if len(self.course) > 50:
-                prior_course = json.dumps(dict(list(self.course.items())[-50:]), indent=4)
+                prior_course = json.dumps(
+                    dict(list(self.course.items())[-50:]), indent=4
+                )
             else:
                 prior_course = json.dumps(self.course, indent=4)
-            logging.info(f"The latest lessons that have been completed so far are as follows:\n {prior_course}")
-            new_course = self.learner.design_course(software_name, package_name, demo_file_path, file_content, prior_course)
+            logging.info(
+                f"The latest lessons that have been completed so far are as follows:\n {prior_course}"
+            )
+            new_course = self.learner.design_course(
+                software_name, package_name, demo_file_path, file_content, prior_course
+            )
             self.course.update(new_course)
-            self.learn_course(new_course)   
-            save_json(prior_course_path, new_course)      
+            self.learn_course(new_course)
+            save_json(prior_course_path, new_course)
 
     def text_extract(self, demo_file_path):
         """
@@ -130,7 +152,9 @@ class SelfLearning:
         file_content = self.text_extractor.extract_file_content(demo_file_path)
         return file_content
 
-    def course_design(self, software_name, package_name, demo_file_path, file_content=None):
+    def course_design(
+        self, software_name, package_name, demo_file_path, file_content=None
+    ):
         """
         Designs a course based on the provided software and package name, using content extracted from a demo file.
 
@@ -143,7 +167,9 @@ class SelfLearning:
         Returns:
             dict: The designed course as a dictionary.
         """
-        course = self.learner.design_course(software_name, package_name, demo_file_path, file_content)
+        course = self.learner.design_course(
+            software_name, package_name, demo_file_path, file_content
+        )
         return course
 
     def learn_course(self, course):
@@ -155,14 +181,8 @@ class SelfLearning:
         Returns:
             None.
         """
-        logging.info(f'There are {len(self.course)} lessons in the course.')
+        logging.info(f"There are {len(self.course)} lessons in the course.")
         for name, lesson in course.items():
             logging.info(f"The current lesson is: {name}")
             logging.info(f"The current lesson content is: {lesson}")
             self.agent.run(lesson)
-
-
-
-
-
-

@@ -1,16 +1,17 @@
 import hashlib
 import logging
 import re
-import requests
-import pdfplumber
 from io import BytesIO
+
+import pdfplumber
+import requests
+
 try:
     from bs4 import BeautifulSoup
 except ImportError:
     raise ImportError(
         'Webpage requires extra dependencies. Install with `pip install --upgrade "embedchain[dataloaders]"`'
     ) from None
-
 
 
 def clean_string(text):
@@ -47,39 +48,45 @@ def clean_string(text):
     return cleaned_text
 
 
-
 class WebPageLoader:
     # Shared session for all instances
     _session = requests.Session()
 
     def load_data(self, url):
         """Load data from a web page using a shared requests session."""
-        headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+        }
         web_data = {}
         content = ""
         try:
-            response = self._session.get(url,headers=headers, timeout=30)
+            response = self._session.get(url, headers=headers, timeout=30)
             response.raise_for_status()
             data = response.content
             # Check content type
-            content_type = response.headers.get('Content-Type', '')
+            content_type = response.headers.get("Content-Type", "")
             # print(content_type)
-            if 'html' in content_type:
+            if "html" in content_type:
                 content = self._get_clean_content(data, url)
 
-
-            elif 'pdf' in content_type:
+            elif "pdf" in content_type:
                 # Open the PDF file using pdfplumber
                 with pdfplumber.open(BytesIO(response.content)) as pdf:
                     # Extract text from each page and combine it
-                    content = '\n'.join([page.extract_text() for page in pdf.pages if page.extract_text()])
+                    content = "\n".join(
+                        [
+                            page.extract_text()
+                            for page in pdf.pages
+                            if page.extract_text()
+                        ]
+                    )
 
             meta_data = {"url": url}
 
             doc_id = hashlib.sha256((content + url).encode()).hexdigest()
             web_data = {
-            "doc_id": doc_id,
-            "data": [
+                "doc_id": doc_id,
+                "data": [
                     {
                         "content": content,
                         "meta_data": meta_data,
@@ -89,11 +96,11 @@ class WebPageLoader:
         except Exception:
             web_data = {
                 "data": [
-                        {
-                            "content": "",
-                            "meta_data": "",
-                        }
-                    ],
+                    {
+                        "content": "",
+                        "meta_data": "",
+                    }
+                ],
             }
         return web_data
 
@@ -149,5 +156,3 @@ class WebPageLoader:
     @classmethod
     def close_session(cls):
         cls._session.close()
-
-
