@@ -89,40 +89,6 @@ class Env(BaseEnv):
         state.pwd = self.working_dir
         state.ls = subprocess.run(['ls'], cwd=self.working_dir, capture_output=True, text=True).stdout
         return state
-        
-        # if (
-        #     language == "python"
-        #     and self.computer.import_computer_api
-        #     and "computer" in code
-        # ):
-        #     if not self.computer._has_imported_computer_api:
-        #         self.computer._has_imported_computer_api = True
-        #         # Give it access to the computer via Python
-        #         self.computer.run(
-        #             language="python",
-        #             code="import time\nfrom interpreter import interpreter\ncomputer = interpreter.computer",  # We ask it to use time, so
-        #             display=self.computer.verbose,
-        #         )
-
-        if stream == False:
-            # If stream == False, *pull* from _streaming_run.
-            output_messages = []
-            for chunk in self._streaming_run(language, code, display=display):
-                if chunk.get("format") != "active_line":
-                    # Should we append this to the last message, or make a new one?
-                    if (
-                        output_messages != []
-                        and output_messages[-1].get("type") == chunk["type"]
-                        and output_messages[-1].get("format") == chunk["format"]
-                    ):
-                        output_messages[-1]["content"] += chunk["content"]
-                    else:
-                        output_messages.append(chunk)
-            return output_messages
-
-        elif stream == True:
-            # If stream == True, replace this with _streaming_run.
-            return self._streaming_run(language, code, display=display)
 
     def _streaming_run(self, language, code, display=False):
         """
