@@ -374,7 +374,8 @@ def GAIA_postprocess(question, response):
 class GAIALoader:
     def __init__(self, level=1, cache_dir=None):
         if cache_dir != None:
-            assert os.path.exists(cache_dir), f"Cache directory {cache_dir} does not exist."
+            if not os.path.exists(cache_dir):
+                raise AssertionError(f"Cache directory {cache_dir} does not exist.")
             self.cache_dir = cache_dir
             try:
                 self.dataset = load_dataset("gaia-benchmark/GAIA", "2023_level{}".format(level), cache_dir=self.cache_dir)
@@ -405,7 +406,8 @@ class GAIALoader:
 class SheetTaskLoader:
     def __init__(self, sheet_task_path=None):
         if sheet_task_path != None:
-            assert os.path.exists(sheet_task_path), f"Sheet task jsonl file {sheet_task_path} does not exist."
+            if not os.path.exists(sheet_task_path):
+                raise AssertionError(f"Sheet task jsonl file {sheet_task_path} does not exist.")
             self.sheet_task_path = sheet_task_path
             try:
                 self.dataset = self.load_sheet_task_dataset()
