@@ -38,7 +38,7 @@ class ActionNode:
             str: The action's name.
         """
         return self._name
-    
+
     @property
     def description(self):
         """
@@ -58,7 +58,7 @@ class ActionNode:
             str: The value returned by the action upon execution.
         """
         return self._return_val
-   
+
     @property
     def relevant_action(self):
         """
@@ -68,7 +68,7 @@ class ActionNode:
             dict: The action's relevant code snippets or references.
         """
         return self._relevant_code
-    
+
     @property
     def status(self):
         """
@@ -78,7 +78,7 @@ class ActionNode:
             bool: True if the action has been executed successfully, False otherwise.
         """
         return self._status  
-    
+
     @property
     def node_type(self):
         """
@@ -88,7 +88,7 @@ class ActionNode:
             str: The action's type.
         """
         return self._type 
-    
+
     @property
     def next_action(self):
         """
@@ -98,7 +98,7 @@ class ActionNode:
             dict: A mapping of subsequent actions.
         """
         return self._next_action   
-    
+
     def __str__(self):
         """
         Provides a string representation of the ActionNode instance.

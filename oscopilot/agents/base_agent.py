@@ -23,7 +23,7 @@ class BaseAgent:
         Initializes a new instance of BaseAgent with default values for its attributes.
         """
         self.system_version = get_os_version()
-        
+
     def extract_information(self, message, begin_str='[BEGIN]', end_str='[END]'):
         """
         Extracts substrings from a message that are enclosed within specified begin and end markers.
@@ -63,7 +63,7 @@ class BaseAgent:
         """
         # Improved regular expression to find JSON data within a string
         json_regex = r'```json\s*\n\{[\s\S]*?\n\}\s*```'
-        
+
         # Search for JSON data in the text
         matches = re.findall(json_regex, text)
 

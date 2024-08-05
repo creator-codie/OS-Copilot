@@ -84,13 +84,13 @@ class PythonJupyterEnv(BaseEnv):
 
         # Get the path to the current Python executable
         python_executable = sys.executable
-        
+
         # Create a KernelManager instance using the current Python executable
         self.km = KernelManager(kernel_name='python3', kernel_cmd=[python_executable, '-m', 'ipykernel_launcher', '-f', '{connection_file}'])
         # self.km.start_kernel()
         # self.kc = self.km.client()
         # self.kc.start_channels()
-            
+
         # self.km = KernelManager(kernel_name="python3")
         self.km.start_kernel()
         self.kc = self.km.client()

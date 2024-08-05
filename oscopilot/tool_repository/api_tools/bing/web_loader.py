@@ -67,13 +67,13 @@ class WebPageLoader:
             if 'html' in content_type:
                 content = self._get_clean_content(data, url)
 
-                
+
             elif 'pdf' in content_type:
                 # Open the PDF file using pdfplumber
                 with pdfplumber.open(BytesIO(response.content)) as pdf:
                     # Extract text from each page and combine it
                     content = '\n'.join([page.extract_text() for page in pdf.pages if page.extract_text()])
-                            
+
             meta_data = {"url": url}
 
             doc_id = hashlib.sha256((content + url).encode()).hexdigest()
