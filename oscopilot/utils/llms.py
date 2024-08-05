@@ -118,9 +118,8 @@ class OLLAMA:
             # Get the response data
             logging.info(f"""Response: {response.json()["message"]["content"]}""")
             return response.json()["message"]["content"]
-        else:
-            logging.error("Failed to call LLM: ", response.status_code)
-            return ""
+        logging.error("Failed to call LLM: ", response.status_code)
+        return ""
 
 
 def main():

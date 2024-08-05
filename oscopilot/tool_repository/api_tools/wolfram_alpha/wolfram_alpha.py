@@ -28,7 +28,6 @@ async def wolframalpha_query(item: QueryItem):
     # Handle the query result
     if res["@success"] == "false":
         return {"result": "Query failed"}
-    else:
-        # Return the first result text
-        result = next(res.results).text
-        return {"result": result}
+    # Return the first result text
+    result = next(res.results).text
+    return {"result": result}
