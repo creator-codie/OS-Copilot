@@ -9,7 +9,7 @@ class SelfLearning:
     """
     A class designed to facilitate self-learning for software-related topics by automatically generating and
     engaging with courses based on provided software and package information.
-    
+
     Attributes:
         config (dict): Configuration settings for the learning process.
         agent (object): An external agent or tool that interacts with the learning content or environment.
@@ -129,7 +129,7 @@ class SelfLearning:
         """
         file_content = self.text_extractor.extract_file_content(demo_file_path)
         return file_content
-    
+
     def course_design(self, software_name, package_name, demo_file_path, file_content=None):
         """
         Designs a course based on the provided software and package name, using content extracted from a demo file.

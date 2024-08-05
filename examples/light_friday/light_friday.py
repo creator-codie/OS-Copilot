@@ -25,7 +25,7 @@ def rich_print(markdown_text):
 def send_chat_prompts(message, llm):
     return llm.chat(message)
 
-    
+
 def extract_code(input_string):
     pattern = r"```(\w+)?\s*(.*?)```"  
     matches = re.findall(pattern, input_string, re.DOTALL)
@@ -48,7 +48,7 @@ class LightFriday(BaseModule):
     def __init__(self, args):
         super().__init__()
         self.args = args
-    
+
     def execute_tool(self, code, lang):
         state = self.environment.step(lang, code)  # node_type
         return_info = ''
@@ -82,7 +82,7 @@ Currently, supported languages include Python and Bash."
         System Version: {system_version}
         Task: {task}
         Current Working Directiory: {working_dir}'''.format(system_version=self.system_version, task=task, working_dir=self.environment.working_dir)
-        
+
         message = [
             {"role": "system", "content": light_planner_sys_prompt},
             {"role": "user", "content": light_planner_user_prompt},
@@ -105,7 +105,7 @@ Currently, supported languages include Python and Bash."
                 message.append({"role": "user", "content": light_exec_user_prompt})
             else:
                 message.append({"role": "user", "content": "Please continue. If all tasks have been completed, reply with 'Execution Complete'. If you believe subsequent tasks cannot continue, reply with 'Execution Interrupted', including the reasons why the tasks cannot proceed, and provide the user with some possible solutions."})
-            
+
             if 'Execution Complete' in response or 'Execution Interrupted' in response:
                 break
 

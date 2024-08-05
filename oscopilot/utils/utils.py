@@ -35,7 +35,7 @@ def save_json(file_path, new_json_content):
         # If the file exists, read its content
         with open(file_path, 'r') as f:
             json_content = json.load(f)
-        
+
         # Check the type of existing JSON content
         if isinstance(json_content, list):
             # If the existing content is a list, append or extend the new content
@@ -53,7 +53,7 @@ def save_json(file_path, new_json_content):
         else:
             # If the existing content is neither a list nor a dictionary, return without saving
             return
-        
+
         # Write the updated JSON content back to the file
         with open(file_path, 'w') as f:
             json.dump(json_content, f, indent=4)
@@ -243,7 +243,7 @@ def format_source(source: str, limit: int = 20) -> str:
 def is_valid_json_string(source: str):
     """
     Checks if a given string is a valid JSON.
-    
+
     Args:
         source (str): The string to be validated as JSON.
 
@@ -340,10 +340,10 @@ def send_chat_prompts(sys_prompt, user_prompt, llm, prefix=""):
 def get_project_root_path():
     """
     This function returns the absolute path of the project root directory. It assumes that it is being called from a file located in oscopilot/utils/.
-    
+
     Args:
         None
-    
+
     Returns:
         str: The absolute path of the project root directory.
     """
@@ -383,8 +383,8 @@ class GAIALoader:
                 raise Exception(f"Failed to load GAIA dataset: {e}")
         else:
             self.dataset = load_dataset("gaia-benchmark/GAIA", "2023_level{}".format(level))
-            
-        
+
+
     def get_data_by_task_id(self, task_id, dataset_type):
         if self.dataset is None or dataset_type not in self.dataset:
             raise ValueError("Dataset not loaded or data set not available.")
@@ -402,7 +402,7 @@ class GAIALoader:
         print('GAIA Task {0}:\n{1}'.format(task['task_id'], query))
         logging.info(query)
         return query
-    
+
 class SheetTaskLoader:
     def __init__(self, sheet_task_path=None):
         if sheet_task_path != None:
@@ -433,7 +433,7 @@ class SheetTaskLoader:
                             """
         query = SHEET_TASK_PROMPT.format(context=context, instructions=instructions, file_path=file_path)
         return query
-    
+
     def get_data_by_task_id(self, task_id):
         if self.dataset is None:
             raise ValueError("Dataset not loaded.")

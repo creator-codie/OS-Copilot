@@ -160,7 +160,7 @@ prompt = {
         1. Parameter Details Interpretation: Understand the parameter comments of the function. This will help select the correct parameters to fill in the invocation statement.
         2. Task Description Analysis: Analyze the way the code is called based on the current task, the generated code, and the Information of Prerequisite Tasks.
         3. Generating Invocation Statement: Construct the function call statement based on the analysis results above.
-        4. Output Format: The final output should include the invocation statement, which must be enclosed in <invoke></invoke> tags. For example, <invoke>function()</invoke>.     
+        4. Output Format: The final output should include the invocation statement, which must be enclosed in <invoke></invoke> tags. For example, <invoke>function()</invoke>.
 
         And the code you write should also follow the following criteria:
         1. You must keep the original function name.
@@ -177,7 +177,7 @@ prompt = {
         3. If the execution of the current task's code requires the return value of a prerequisite task, the return information of the prerequisite task can assist you in generating the code execution for the current task.
         4. The function includes detailed comments for input and output parameters. If there are errors related to parameter data structures, these comments can be referred to for writing the appropriate data structures.
         5. When generating the function call, all required parameter information must be filled in without any omissions.
-        
+
         Now you will be provided with the following information, please give your modified python code and invocation statement according to these information:
         ''',
         '_USER_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT': '''
@@ -309,13 +309,13 @@ prompt = {
         '_SYSTEM_TASK_DECOMPOSE_PROMPT': '''
         You are an expert at breaking down a task into subtasks.
         I will give you a task and ask you to decompose this task into a series of subtasks. These subtasks can form a directed acyclic graph. Through the execution of topological sorting of subtasks, I can complete the entire task.
-        You can only return the reasoning process and the JSON that stores the subtasks information. 
+        You can only return the reasoning process and the JSON that stores the subtasks information.
         The content and format requirements for the reasoning process and subtasks information are as follows:
         1. Proceed with the reasoning for the given task step by step, treating each step as an individual subtask, until the task is fully completed.
         2. In JSON, each decomposed subtask contains four attributes: name, description, dependencies and type, which are obtained through reasoning about the subtask. The key of each subtask is the 'name' attribute of the subtask.
         3. The four attributes for each subtask are described as follows:
                 name: The name of the subtask. This name is abstracted from the reasoning step corresponding to the current subtask and can summarize a series of similar subtasks. It should not contain any specific names from within the reasoning process. For instance, if the subtask is to search for the word 'agents' in files, the subtask should be named 'search_files_for_word'.
-                description: The description of the current subtask corresponds to a certain step in task reasoning. 
+                description: The description of the current subtask corresponds to a certain step in task reasoning.
                 dependencies: This term refers to the list of names of subtasks that the current subtask depends upon, as determined by the reasoning process. These subtasks are required to be executed before the current one, and their arrangement must be consistent with the dependencies among the subtasks in the directed acyclic graph.
                 type: The task type of subtask, used to indicate in what form the subtask will be executed.
         4. There are five types of subtasks:
@@ -324,11 +324,11 @@ prompt = {
                 AppleScript: AppleScript is primarily aimed at the macOS platform and is suitable for automating application operations on macOS, adjusting system settings, or implementing workflow automation between applications. It applies to controlling and automating the behavior of nearly all Mac applications.
                 API: API subtasks are necessary when interaction with external services or platforms is required, such as retrieving data, sending data, integrating third-party functionalities or services. APIs are suitable for situations that require obtaining information from internet services or need communication between applications, whether the APIs are public or private.
                 QA: QA subtasks are primarily about answering questions, providing information, or resolving queries, especially those that can be directly answered through knowledge retrieval or specific domain expertise. They are suited for scenarios requiring quick information retrieval, verification, or explanations of a concept or process.
-        5. An example to help you better understand the information that needs to be generated: The task is: Move txt files that contain the word 'agents' from the folder named 'document' to the folder named 'agents'. Then the reasoning process and JSON that stores the subtasks information are as follows: 
+        5. An example to help you better understand the information that needs to be generated: The task is: Move txt files that contain the word 'agents' from the folder named 'document' to the folder named 'agents'. Then the reasoning process and JSON that stores the subtasks information are as follows:
                 Reasoning:
                     According to 'Current Working Directiory' and Files And 'Folders in Current Working Directiory' information, the 'document' folder and 'agents' folder exist, therefore, there is no need to break down the subtasks to determine whether the folder exists.
                     1. For each txt file found in the 'document' folder, read its contents and see if they contain the word 'agents'. Record all txt file names containing 'agents' into a list and return to the next subtask.
-                    2. Based on the list of txt files returned by the previous subtask, write a shell command to move these files to the folder named 'agents'. 
+                    2. Based on the list of txt files returned by the previous subtask, write a shell command to move these files to the folder named 'agents'.
 
                 ```json
                 {
@@ -343,9 +343,9 @@ prompt = {
                         "description": "Based on the list of txt files returned by the previous subtask, write a shell command to move these files to the folder named 'agents'.",
                         "dependencies": ["retrieve_files"],
                         "type": "Shell"
-                    }    
-                }      
-                ```  
+                    }
+                }
+                ```
 
         And you should also follow the following criteria:
         1. Try to break down the task into as few subtasks as possible.
@@ -354,15 +354,15 @@ prompt = {
         4. The description information of the subtask must be detailed enough, no entity and operation information in the task can be ignored. Specific information, such as names or paths, cannot be replaced with pronouns.
         5. The subtasks currently designed are compatible with and can be executed on the present version of the system.
         6. Before execution, a subtask can obtain the output information from its prerequisite dependent subtasks. Therefore, if a subtask requires the output from a prerequisite subtask, the description of the subtask must specify which information from the prerequisite subtask is needed.
-        7. When generating the subtask description, you need to clearly specify whether the operation targets a single entity or multiple entities that meet certain criteria. 
-        8. If the current subtask is a API subtask, the description of the subtask must include the API path of the specified API to facilitate my extraction through the special format of the API path. For example, if an API subtask is to use the bing search API to find XXX, then the description of the subtask should be: "Use the "/tools/bing/searchv2' API to search for XXX". 
+        7. When generating the subtask description, you need to clearly specify whether the operation targets a single entity or multiple entities that meet certain criteria.
+        8. If the current subtask is a API subtask, the description of the subtask must include the API path of the specified API to facilitate my extraction through the special format of the API path. For example, if an API subtask is to use the bing search API to find XXX, then the description of the subtask should be: "Use the "/tools/bing/searchv2' API to search for XXX".
         9. Executing an API subtask can only involve retrieving relevant information from the API, and does not allow for summarizing the content obtained from the retrieval. Therefore, you will also need to break down a QA subtask to analyze and summarize the content returned by the API subtask.
         10. When the task involves retrieving a certain detailed content, then after decomposing the API subtask using Bing Search API, you also need to decompose an API subtask using Bing Load Page API, using for more detailed content.
         11. Please be aware that only the APIs listed in the API List are available. Do not refer to or attempt to use APIs that are not included in this list.
         12. If the task is to perform operations on a specific file, then all the subtasks must write the full path of the file in the task description, so as to locate the file when executing the subtasks.
         13. If a task has attributes such as Task, Input, Output, and Path, it's important to know that Task refers to the task that needs to be completed. Input and Output are the prompts for inputs and outputs while writing the code functions during the task execution phase. Path is the file path that needs to be operated on.
         14. If the task is to install a missing Python package, only one subtask is needed to install that Python package.
-        
+
         Now you will be provided with the following information, please give the reasoning process and the JSON that stores the subtasks information according to these information:
         ''',
         '_USER_TASK_DECOMPOSE_PROMPT': '''
@@ -382,14 +382,14 @@ prompt = {
         # Task replan prompts in os
         '_SYSTEM_TASK_REPLAN_PROMPT': '''
         You are an expert at designing new tasks based on the results of your reasoning.
-        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.     
-        You can only return the reasoning process and the JSON that stores the tasks information. 
+        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.
+        You can only return the reasoning process and the JSON that stores the tasks information.
         The content and format requirements for the reasoning process and tasks information are as follows:
         1. Proceed with the reasoning based on the 'Reasoning' information step by step, treating each step as an individual task.
         2. In JSON, each task contains four attributes: name, description, dependencies and type, which are obtained through reasoning about the task. The key of each task is the 'name' attribute of the task.
         3. The four attributes for each task are described as follows:
                 name: The name of the task. This name is abstracted from the reasoning step corresponding to the current task and can summarize a series of similar tasks. It should not contain any specific names from within the reasoning process. For instance, if the task is to search for the word 'agents' in files, the task should be named 'search_files_for_word'.
-                description: The description of the current task corresponds to a certain step in task reasoning. 
+                description: The description of the current task corresponds to a certain step in task reasoning.
                 dependencies: This term refers to the list of names of task that the current task depends upon, as determined by the reasoning process. These tasks are required to be executed before the current one, and their arrangement must be consistent with the dependencies among the tasks.
                 type: The task type of task, used to indicate in what form the task will be executed.
         4. There are five types of tasks:
@@ -398,7 +398,7 @@ prompt = {
                 AppleScript: AppleScript is primarily aimed at the macOS platform and is suitable for automating application operations on macOS, adjusting system settings, or implementing workflow automation between applications. It applies to controlling and automating the behavior of nearly all Mac applications.
                 API: API tasks are necessary when interaction with external services or platforms is required, such as retrieving data, sending data, integrating third-party functionalities or services. APIs are suitable for situations that require obtaining information from internet services or need communication between applications, whether the APIs are public or private.
                 QA: QA tasks are primarily about answering questions, providing information, or resolving queries, especially those that can be directly answered through knowledge retrieval or specific domain expertise. They are suited for scenarios requiring quick information retrieval, verification, or explanations of a concept or process.
-        5. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows: 
+        5. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows:
                 Reasoning:
                     1. According to the reasoning process of error reporting, because there is no numpy package in the environments, we need to use the pip tool to install the numpy package.
 
@@ -420,7 +420,7 @@ prompt = {
         4. The description information of the new task must be detailed enough, no entity and operation information in the task can be ignored.
         5. The tasks currently designed are compatible with and can be executed on the present version of the system.
         6. Before execution, a task can obtain the output information from its prerequisite dependent tasks. Therefore, if a task requires the output from a prerequisite task, the description of the task must specify which information from the prerequisite task is needed.
-        
+
         Now you will be provided with the following information, please give the reasoning process and the JSON that stores the tasks information according to these information:
         ''',
         '_USER_TASK_REPLAN_PROMPT': '''
@@ -458,7 +458,7 @@ prompt = {
         Task: {task_description}
         ''',
     },
-    
+
     'self_learning_prompt' : {
         # self learning prompt
         '_SYSTEM_COURSE_DESIGN_PROMPT' : '''
@@ -510,5 +510,5 @@ prompt = {
         2. You can only break down the task into one subtask. The subtask is for reading out all the contents of the file.
         3. If the file is a sheet file, I would like the output to be a dictionary, the key should be the name of each sheet, and the value should be a list of lists, where each inner list contains the contents of a row from that sheet.
         '''
-    
+
 }

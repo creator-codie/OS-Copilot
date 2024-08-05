@@ -109,7 +109,7 @@ class FridayRetriever(BaseModule):
         """
         retrieve_tool_code = self.tool_manager.retrieve_tool_code(tool_name)
         return retrieve_tool_code 
-    
+
     def retrieve_tool_code_pair(self, retrieve_tool_name):
         """
         Retrieves a mapping of tool names to their respective codes for a list of tools.
@@ -129,7 +129,7 @@ class FridayRetriever(BaseModule):
         for name, description in zip(retrieve_tool_name, retrieve_tool_code):
             tool_code_pair[name] = description
         return tool_code_pair        
-        
+
     def retrieve_tool_description_pair(self, retrieve_tool_name):
         """
         Retrieves a mapping of tool names to their descriptions for a list of tools.

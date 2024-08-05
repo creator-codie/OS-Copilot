@@ -152,7 +152,7 @@ prompt = {
         1. Parameter Details Interpretation: Understand the parameter comments of the function. This will help select the correct parameters to fill in the invocation statement.
         2. Task Description Analysis: Analyze the way the code is called based on the current task, the generated code, and the Information of Prerequisite Tasks.
         3. Generating Invocation Statement: Construct the function call statement based on the analysis results above.
-        4. Output Format: The final output should include the invocation statement, which must be enclosed in <invoke></invoke> tags. For example, <invoke>function()</invoke>.     
+        4. Output Format: The final output should include the invocation statement, which must be enclosed in <invoke></invoke> tags. For example, <invoke>function()</invoke>.
 
         And the code you write should also follow the following criteria:
         1. You must keep the original function name.
@@ -169,7 +169,7 @@ prompt = {
         3. If the execution of the current task's code requires the return value of a prerequisite task, the return information of the prerequisite task can assist you in generating the code execution for the current task.
         4. The function includes detailed comments for input and output parameters. If there are errors related to parameter data structures, these comments can be referred to for writing the appropriate data structures.
         5. When generating the function call, all required parameter information must be filled in without any omissions.
-        
+
         Now you will be provided with the following information, please give your modified python code and invocation statement according to these information:
         ''',
         '_USER_PYTHON_SKILL_AMEND_AND_INVOKE_PROMPT': '''
@@ -306,7 +306,7 @@ prompt = {
         1. Try to break down the task into as few subtasks as possible.
         2. The description of each subtask must be detailed enough, no entity and operation information in the task can be ignored. Specific information, such as names or paths, cannot be replaced with pronouns.
         3. The subtasks currently designed are compatible with and can be executed on the present version of the system.
-        
+
         You can only provide me with a list of subtasks in order.
         ''',
         '_USER_TASK_DECOMPOSE_PROMPT': '''
@@ -319,14 +319,14 @@ prompt = {
         # Task replan prompts in os
         '_SYSTEM_TASK_REPLAN_PROMPT': '''
         You are an expert at designing new tasks based on the results of your reasoning.
-        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.     
-        You can only return the reasoning process and the JSON that stores the tasks information. 
+        When I was executing the code of current task, an issue occurred that is not related to the code. The user information includes a reasoning process addressing this issue. Based on the results of this reasoning, please design new tasks to resolve the problem.
+        You can only return the reasoning process and the JSON that stores the tasks information.
         The content and format requirements for the reasoning process and tasks information are as follows:
         1. Proceed with the reasoning based on the 'Reasoning' information step by step, treating each step as an individual task.
         2. In JSON, each task contains four attributes: name, description, dependencies and type, which are obtained through reasoning about the task. The key of each task is the 'name' attribute of the task.
         3. The four attributes for each task are described as follows:
                 name: The name of the task. This name is abstracted from the reasoning step corresponding to the current task and can summarize a series of similar tasks. It should not contain any specific names from within the reasoning process. For instance, if the task is to search for the word 'agents' in files, the task should be named 'search_files_for_word'.
-                description: The description of the current task corresponds to a certain step in task reasoning. 
+                description: The description of the current task corresponds to a certain step in task reasoning.
                 dependencies: This term refers to the list of names of task that the current task depends upon, as determined by the reasoning process. These tasks are required to be executed before the current one, and their arrangement must be consistent with the dependencies among the tasks.
                 type: The task type of task, used to indicate in what form the task will be executed.
         4. There are five types of tasks:
@@ -335,7 +335,7 @@ prompt = {
                 AppleScript: AppleScript is primarily aimed at the macOS platform and is suitable for automating application operations on macOS, adjusting system settings, or implementing workflow automation between applications. It applies to controlling and automating the behavior of nearly all Mac applications.
                 API: API tasks are necessary when interaction with external services or platforms is required, such as retrieving data, sending data, integrating third-party functionalities or services. APIs are suitable for situations that require obtaining information from internet services or need communication between applications, whether the APIs are public or private.
                 QA: QA tasks are primarily about answering questions, providing information, or resolving queries, especially those that can be directly answered through knowledge retrieval or specific domain expertise. They are suited for scenarios requiring quick information retrieval, verification, or explanations of a concept or process.
-        5. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows: 
+        5. An example to help you better understand the information that needs to be generated: The reasoning process analyzed that the reason for the error was that there was no numpy package in the environments, causing it to fail to run. Then the reasoning process and JSON that stores the tasks information are as follows:
                 Reasoning:
                     1. According to the reasoning process of error reporting, because there is no numpy package in the environments, we need to use the pip tool to install the numpy package.
 
@@ -357,7 +357,7 @@ prompt = {
         4. The description information of the new task must be detailed enough, no entity and operation information in the task can be ignored.
         5. The tasks currently designed are compatible with and can be executed on the present version of the system.
         6. Before execution, a task can obtain the output information from its prerequisite dependent tasks. Therefore, if a task requires the output from a prerequisite task, the description of the task must specify which information from the prerequisite task is needed.
-        
+
         Now you will be provided with the following information, please give the reasoning process and the JSON that stores the tasks information according to these information:
         ''',
         '_USER_TASK_REPLAN_PROMPT': '''
@@ -375,5 +375,5 @@ prompt = {
         3. 'Tool List' contains the name of each tool and the corresponding operation description. These tools are previously accumulated for completing corresponding tasks. If a task corresponds to the description of a certain tool, then the task name and the tool name are the same, to facilitate the invocation of the relevant tool when executing the task.
         ''',
     }
-    
+
 }
