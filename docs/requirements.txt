@@ -57,7 +57,7 @@ jsonpatch==1.33
 jsonpointer==2.4
 kiwisolver==1.4.5
 kubernetes==28.1.0
-langchain==0.2.3
+langchain==0.3.7
 langchain-community==0.2.9
 langchain-core==0.1.35
 langsmith==0.0.69
